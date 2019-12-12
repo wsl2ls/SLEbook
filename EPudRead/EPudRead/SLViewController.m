@@ -191,71 +191,71 @@
     return ranges;
 }
 //// 文本和图片附件 分页计算
-//- (NSMutableArray *)coreTextPaging:(NSMutableAttributedString *)orginAttString contentSize:(CGSize)contentSize {
-//    NSMutableArray *pagingArray = [NSMutableArray array];
-//    YYTextContainer *textContainer = [YYTextContainer containerWithSize:contentSize];
-//    CGFloat location = 0;
-//    while (location < orginAttString.length) {
-//        YYTextLayout* textLayout = [YYTextLayout layoutWithContainer:textContainer text:[orginAttString attributedSubstringFromRange:NSMakeRange(0, orginAttString.length - location)]];
-//        NSRange rang =  [textLayout visibleRange];
-//        NSAttributedString *attStr =[orginAttString attributedSubstringFromRange:NSMakeRange(location, rang.length)];
-//        [pagingArray addObject:attStr];
-//        location+=rang.length;
-//        NSLog(@"%f",location);
-//    }
-//    return pagingArray;
-//}
-
-+ (NSArray *)pagingwithContentString:(NSString *)contentString contentSize:(CGSize)contentSize textAttribute:(NSDictionary *)textAttribute {
+- (NSMutableArray *)coreTextPaging:(NSMutableAttributedString *)orginAttString contentSize:(CGSize)contentSize {
     NSMutableArray *pagingArray = [NSMutableArray array];
-    NSMutableAttributedString *orginAttString = [[NSMutableAttributedString alloc] initWithString:contentString attributes:textAttribute];
-    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:orginAttString];
-    NSLayoutManager* layoutManager = [[NSLayoutManager alloc] init];
-    [textStorage addLayoutManager:layoutManager];
-    
-    while (YES) {
-        NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:contentSize];
-        [layoutManager addTextContainer:textContainer];
-        NSRange rang = [layoutManager glyphRangeForTextContainer:textContainer];
-        if (rang.length <= 0) {
-            break;
-        }
-        NSAttributedString *attStr =[textStorage attributedSubstringFromRange:rang];
+    YYTextContainer *textContainer = [YYTextContainer containerWithSize:contentSize];
+    CGFloat location = 0;
+    while (location < orginAttString.length) {
+        YYTextLayout* textLayout = [YYTextLayout layoutWithContainer:textContainer text:[orginAttString attributedSubstringFromRange:NSMakeRange(0, orginAttString.length - location)]];
+        NSRange rang =  [textLayout visibleRange];
+        NSAttributedString *attStr =[orginAttString attributedSubstringFromRange:NSMakeRange(location, rang.length)];
         [pagingArray addObject:attStr];
+        location+=rang.length;
+        NSLog(@"%f",location);
     }
     return pagingArray;
 }
 
-+ (NSArray *)coreTextPaging:(NSAttributedString *)str textFrame:(CGRect)textFrame{
-    NSMutableArray *pagingResult = [NSMutableArray array];
-    CFAttributedStringRef cfAttStr = (__bridge CFAttributedStringRef)str;
-    //直接桥接，引用计数不变
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(cfAttStr);
-    CGPathRef path = CGPathCreateWithRect(textFrame, NULL);
-    
-    int textPos = 0;
-    
-    NSUInteger strLength = [str length];
-    while (textPos < strLength) {
-        //设置路径
-        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPos, 0), path, NULL);
-        //生成frame
-        CFRange frameRange = CTFrameGetVisibleStringRange(frame);
-        NSRange ra = NSMakeRange(frameRange.location, frameRange.length);
-        
-        [pagingResult addObject:[str attributedSubstringFromRange:ra]];
-        
-        //获取范围并转换为NSRange，然后以NSString形式保存
-        textPos += frameRange.length;
-        //移动当前文本位置
-        CFRelease(frame);
-    }
-    CGPathRelease(path);
-    CFRelease(framesetter);
-    //释放frameSetter
-    return pagingResult;
-
-}
+//- (NSArray *)pagingwithContentString:(NSString *)contentString contentSize:(CGSize)contentSize textAttribute:(NSDictionary *)textAttribute {
+//    NSMutableArray *pagingArray = [NSMutableArray array];
+//    NSMutableAttributedString *orginAttString = [[NSMutableAttributedString alloc] initWithString:contentString attributes:textAttribute];
+//    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:orginAttString];
+//    NSLayoutManager* layoutManager = [[NSLayoutManager alloc] init];
+//    [textStorage addLayoutManager:layoutManager];
+//
+//    while (YES) {
+//        NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:contentSize];
+//        [layoutManager addTextContainer:textContainer];
+//        NSRange rang = [layoutManager glyphRangeForTextContainer:textContainer];
+//        if (rang.length <= 0) {
+//            break;
+//        }
+//        NSAttributedString *attStr =[textStorage attributedSubstringFromRange:rang];
+//        [pagingArray addObject:attStr];
+//    }
+//    return pagingArray;
+//}
+//
+//- (NSArray *)coreTextPaging:(NSAttributedString *)str textFrame:(CGRect)textFrame{
+//    NSMutableArray *pagingResult = [NSMutableArray array];
+//    CFAttributedStringRef cfAttStr = (__bridge CFAttributedStringRef)str;
+//    //直接桥接，引用计数不变
+//    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(cfAttStr);
+//    CGPathRef path = CGPathCreateWithRect(textFrame, NULL);
+//
+//    int textPos = 0;
+//
+//    NSUInteger strLength = [str length];
+//    while (textPos < strLength) {
+//        //设置路径
+//        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPos, 0), path, NULL);
+//        //生成frame
+//        CFRange frameRange = CTFrameGetVisibleStringRange(frame);
+//        NSRange ra = NSMakeRange(frameRange.location, frameRange.length);
+//
+//        [pagingResult addObject:[str attributedSubstringFromRange:ra]];
+//
+//        //获取范围并转换为NSRange，然后以NSString形式保存
+//        textPos += frameRange.length;
+//        //移动当前文本位置
+//        CFRelease(frame);
+//    }
+//    CGPathRelease(path);
+//    CFRelease(framesetter);
+//    //释放frameSetter
+//    return pagingResult;
+//
+//}
 
 
 #pragma mark - UITextViewDelegate
