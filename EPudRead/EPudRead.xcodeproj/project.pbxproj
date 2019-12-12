@@ -1,0 +1,726 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		786E2D4423A09A6900A11F08 /* SLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 786E2D4323A09A6900A11F08 /* SLViewController.m */; };
+		786E2D4623A0CF8400A11F08 /* lufei.png in Resources */ = {isa = PBXBuildFile; fileRef = 786E2D4523A0CF8400A11F08 /* lufei.png */; };
+		787DA8EB239F47B30046A121 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA8EA239F47B30046A121 /* AppDelegate.m */; };
+		787DA8EE239F47B30046A121 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA8ED239F47B30046A121 /* SceneDelegate.m */; };
+		787DA8F1239F47B30046A121 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA8F0239F47B30046A121 /* ViewController.m */; };
+		787DA8F4239F47B30046A121 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 787DA8F2239F47B30046A121 /* Main.storyboard */; };
+		787DA8F6239F47B50046A121 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 787DA8F5239F47B50046A121 /* Assets.xcassets */; };
+		787DA8F9239F47B50046A121 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 787DA8F7239F47B50046A121 /* LaunchScreen.storyboard */; };
+		787DA8FC239F47B50046A121 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA8FB239F47B50046A121 /* main.m */; };
+		787DA906239F47B50046A121 /* EPudReadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA905239F47B50046A121 /* EPudReadTests.m */; };
+		787DA911239F47B50046A121 /* EPudReadUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA910239F47B50046A121 /* EPudReadUITests.m */; };
+		787DA91F239F4D5C0046A121 /* 每天懂一点好玩心理学.epub in Resources */ = {isa = PBXBuildFile; fileRef = 787DA91E239F4D530046A121 /* 每天懂一点好玩心理学.epub */; };
+		787DA923239F7C030046A121 /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA922239F7C030046A121 /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		787DA925239F7C800046A121 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 787DA924239F7C800046A121 /* libxml2.tbd */; };
+		787DA928239FB1B00046A121 /* SLChapterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA927239FB1B00046A121 /* SLChapterModel.m */; };
+		787DA92F239FBBED0046A121 /* LSYReadConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA92A239FBBEC0046A121 /* LSYReadConfig.m */; };
+		787DA931239FBBED0046A121 /* LSYReadParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA92E239FBBED0046A121 /* LSYReadParser.m */; };
+		787DA937239FBCB80046A121 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA934239FBCB70046A121 /* NSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		787DA938239FBCB80046A121 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA936239FBCB80046A121 /* GTMNSString+HTML.m */; };
+		787DA93B239FCF030046A121 /* 中公开学APP.epub in Resources */ = {isa = PBXBuildFile; fileRef = 787DA93A239FCEEE0046A121 /* 中公开学APP.epub */; };
+		F4E5AAD03A991C2A76F85515 /* libPods-EPudRead.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7AC86ECE743D8A2DF0BD1D0 /* libPods-EPudRead.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		787DA902239F47B50046A121 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 787DA8DE239F47B30046A121 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 787DA8E5239F47B30046A121;
+			remoteInfo = EPudRead;
+		};
+		787DA90D239F47B50046A121 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 787DA8DE239F47B30046A121 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 787DA8E5239F47B30046A121;
+			remoteInfo = EPudRead;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		786E2D4223A09A6900A11F08 /* SLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLViewController.h; sourceTree = "<group>"; };
+		786E2D4323A09A6900A11F08 /* SLViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLViewController.m; sourceTree = "<group>"; };
+		786E2D4523A0CF8400A11F08 /* lufei.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lufei.png; sourceTree = "<group>"; };
+		787DA8E6239F47B30046A121 /* EPudRead.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EPudRead.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		787DA8E9239F47B30046A121 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		787DA8EA239F47B30046A121 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		787DA8EC239F47B30046A121 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		787DA8ED239F47B30046A121 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		787DA8EF239F47B30046A121 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		787DA8F0239F47B30046A121 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		787DA8F3239F47B30046A121 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		787DA8F5239F47B50046A121 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		787DA8F8239F47B50046A121 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		787DA8FA239F47B50046A121 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		787DA8FB239F47B50046A121 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		787DA901239F47B50046A121 /* EPudReadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EPudReadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		787DA905239F47B50046A121 /* EPudReadTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EPudReadTests.m; sourceTree = "<group>"; };
+		787DA907239F47B50046A121 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		787DA90C239F47B50046A121 /* EPudReadUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EPudReadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		787DA910239F47B50046A121 /* EPudReadUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EPudReadUITests.m; sourceTree = "<group>"; };
+		787DA912239F47B50046A121 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		787DA91E239F4D530046A121 /* 每天懂一点好玩心理学.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "每天懂一点好玩心理学.epub"; sourceTree = "<group>"; };
+		787DA921239F7C030046A121 /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
+		787DA922239F7C030046A121 /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
+		787DA924239F7C800046A121 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		787DA926239FB1B00046A121 /* SLChapterModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLChapterModel.h; sourceTree = "<group>"; };
+		787DA927239FB1B00046A121 /* SLChapterModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLChapterModel.m; sourceTree = "<group>"; };
+		787DA92A239FBBEC0046A121 /* LSYReadConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSYReadConfig.m; sourceTree = "<group>"; };
+		787DA92C239FBBEC0046A121 /* LSYReadConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSYReadConfig.h; sourceTree = "<group>"; };
+		787DA92D239FBBEC0046A121 /* LSYReadParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSYReadParser.h; sourceTree = "<group>"; };
+		787DA92E239FBBED0046A121 /* LSYReadParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSYReadParser.m; sourceTree = "<group>"; };
+		787DA932239FBCB70046A121 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
+		787DA933239FBCB70046A121 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
+		787DA934239FBCB70046A121 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
+		787DA935239FBCB70046A121 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
+		787DA936239FBCB80046A121 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
+		787DA939239FBF480046A121 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		787DA93A239FCEEE0046A121 /* 中公开学APP.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "中公开学APP.epub"; sourceTree = "<group>"; };
+		8AFDB471C21B16D225BB7D63 /* Pods-EPudRead.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EPudRead.release.xcconfig"; path = "Target Support Files/Pods-EPudRead/Pods-EPudRead.release.xcconfig"; sourceTree = "<group>"; };
+		F33E1E711C3CEAA194A1D6B1 /* Pods-EPudRead.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EPudRead.debug.xcconfig"; path = "Target Support Files/Pods-EPudRead/Pods-EPudRead.debug.xcconfig"; sourceTree = "<group>"; };
+		F7AC86ECE743D8A2DF0BD1D0 /* libPods-EPudRead.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EPudRead.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		787DA8E3239F47B30046A121 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				787DA925239F7C800046A121 /* libxml2.tbd in Frameworks */,
+				F4E5AAD03A991C2A76F85515 /* libPods-EPudRead.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		787DA8FE239F47B50046A121 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		787DA909239F47B50046A121 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		787DA8DD239F47B30046A121 = {
+			isa = PBXGroup;
+			children = (
+				787DA8E8239F47B30046A121 /* EPudRead */,
+				787DA904239F47B50046A121 /* EPudReadTests */,
+				787DA90F239F47B50046A121 /* EPudReadUITests */,
+				787DA8E7239F47B30046A121 /* Products */,
+				B555FF79763ED4D6084E94B5 /* Pods */,
+				9BDED438548C7D36F035879F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		787DA8E7239F47B30046A121 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				787DA8E6239F47B30046A121 /* EPudRead.app */,
+				787DA901239F47B50046A121 /* EPudReadTests.xctest */,
+				787DA90C239F47B50046A121 /* EPudReadUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		787DA8E8239F47B30046A121 /* EPudRead */ = {
+			isa = PBXGroup;
+			children = (
+				787DA920239F7C030046A121 /* GDataXML */,
+				787DA91E239F4D530046A121 /* 每天懂一点好玩心理学.epub */,
+				787DA93A239FCEEE0046A121 /* 中公开学APP.epub */,
+				786E2D4523A0CF8400A11F08 /* lufei.png */,
+				787DA939239FBF480046A121 /* PrefixHeader.pch */,
+				787DA933239FBCB70046A121 /* GTMDefines.h */,
+				787DA932239FBCB70046A121 /* GTMNSString+HTML.h */,
+				787DA936239FBCB80046A121 /* GTMNSString+HTML.m */,
+				787DA935239FBCB70046A121 /* NSString+HTML.h */,
+				787DA934239FBCB70046A121 /* NSString+HTML.m */,
+				787DA92C239FBBEC0046A121 /* LSYReadConfig.h */,
+				787DA92A239FBBEC0046A121 /* LSYReadConfig.m */,
+				787DA92D239FBBEC0046A121 /* LSYReadParser.h */,
+				787DA92E239FBBED0046A121 /* LSYReadParser.m */,
+				787DA8E9239F47B30046A121 /* AppDelegate.h */,
+				787DA8EA239F47B30046A121 /* AppDelegate.m */,
+				787DA8EC239F47B30046A121 /* SceneDelegate.h */,
+				787DA8ED239F47B30046A121 /* SceneDelegate.m */,
+				787DA8EF239F47B30046A121 /* ViewController.h */,
+				787DA8F0239F47B30046A121 /* ViewController.m */,
+				786E2D4223A09A6900A11F08 /* SLViewController.h */,
+				786E2D4323A09A6900A11F08 /* SLViewController.m */,
+				787DA926239FB1B00046A121 /* SLChapterModel.h */,
+				787DA927239FB1B00046A121 /* SLChapterModel.m */,
+				787DA8F2239F47B30046A121 /* Main.storyboard */,
+				787DA8F5239F47B50046A121 /* Assets.xcassets */,
+				787DA8F7239F47B50046A121 /* LaunchScreen.storyboard */,
+				787DA8FA239F47B50046A121 /* Info.plist */,
+				787DA8FB239F47B50046A121 /* main.m */,
+			);
+			path = EPudRead;
+			sourceTree = "<group>";
+		};
+		787DA904239F47B50046A121 /* EPudReadTests */ = {
+			isa = PBXGroup;
+			children = (
+				787DA905239F47B50046A121 /* EPudReadTests.m */,
+				787DA907239F47B50046A121 /* Info.plist */,
+			);
+			path = EPudReadTests;
+			sourceTree = "<group>";
+		};
+		787DA90F239F47B50046A121 /* EPudReadUITests */ = {
+			isa = PBXGroup;
+			children = (
+				787DA910239F47B50046A121 /* EPudReadUITests.m */,
+				787DA912239F47B50046A121 /* Info.plist */,
+			);
+			path = EPudReadUITests;
+			sourceTree = "<group>";
+		};
+		787DA920239F7C030046A121 /* GDataXML */ = {
+			isa = PBXGroup;
+			children = (
+				787DA921239F7C030046A121 /* GDataXMLNode.h */,
+				787DA922239F7C030046A121 /* GDataXMLNode.m */,
+			);
+			path = GDataXML;
+			sourceTree = "<group>";
+		};
+		9BDED438548C7D36F035879F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				787DA924239F7C800046A121 /* libxml2.tbd */,
+				F7AC86ECE743D8A2DF0BD1D0 /* libPods-EPudRead.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B555FF79763ED4D6084E94B5 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F33E1E711C3CEAA194A1D6B1 /* Pods-EPudRead.debug.xcconfig */,
+				8AFDB471C21B16D225BB7D63 /* Pods-EPudRead.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		787DA8E5239F47B30046A121 /* EPudRead */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 787DA915239F47B50046A121 /* Build configuration list for PBXNativeTarget "EPudRead" */;
+			buildPhases = (
+				BC999EBA481F04C61FB55428 /* [CP] Check Pods Manifest.lock */,
+				787DA8E2239F47B30046A121 /* Sources */,
+				787DA8E3239F47B30046A121 /* Frameworks */,
+				787DA8E4239F47B30046A121 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EPudRead;
+			productName = EPudRead;
+			productReference = 787DA8E6239F47B30046A121 /* EPudRead.app */;
+			productType = "com.apple.product-type.application";
+		};
+		787DA900239F47B50046A121 /* EPudReadTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 787DA918239F47B50046A121 /* Build configuration list for PBXNativeTarget "EPudReadTests" */;
+			buildPhases = (
+				787DA8FD239F47B50046A121 /* Sources */,
+				787DA8FE239F47B50046A121 /* Frameworks */,
+				787DA8FF239F47B50046A121 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				787DA903239F47B50046A121 /* PBXTargetDependency */,
+			);
+			name = EPudReadTests;
+			productName = EPudReadTests;
+			productReference = 787DA901239F47B50046A121 /* EPudReadTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		787DA90B239F47B50046A121 /* EPudReadUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 787DA91B239F47B50046A121 /* Build configuration list for PBXNativeTarget "EPudReadUITests" */;
+			buildPhases = (
+				787DA908239F47B50046A121 /* Sources */,
+				787DA909239F47B50046A121 /* Frameworks */,
+				787DA90A239F47B50046A121 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				787DA90E239F47B50046A121 /* PBXTargetDependency */,
+			);
+			name = EPudReadUITests;
+			productName = EPudReadUITests;
+			productReference = 787DA90C239F47B50046A121 /* EPudReadUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		787DA8DE239F47B30046A121 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1120;
+				ORGANIZATIONNAME = wsl;
+				TargetAttributes = {
+					787DA8E5239F47B30046A121 = {
+						CreatedOnToolsVersion = 11.2;
+					};
+					787DA900239F47B50046A121 = {
+						CreatedOnToolsVersion = 11.2;
+						TestTargetID = 787DA8E5239F47B30046A121;
+					};
+					787DA90B239F47B50046A121 = {
+						CreatedOnToolsVersion = 11.2;
+						TestTargetID = 787DA8E5239F47B30046A121;
+					};
+				};
+			};
+			buildConfigurationList = 787DA8E1239F47B30046A121 /* Build configuration list for PBXProject "EPudRead" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 787DA8DD239F47B30046A121;
+			productRefGroup = 787DA8E7239F47B30046A121 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				787DA8E5239F47B30046A121 /* EPudRead */,
+				787DA900239F47B50046A121 /* EPudReadTests */,
+				787DA90B239F47B50046A121 /* EPudReadUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		787DA8E4239F47B30046A121 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				787DA93B239FCF030046A121 /* 中公开学APP.epub in Resources */,
+				786E2D4623A0CF8400A11F08 /* lufei.png in Resources */,
+				787DA91F239F4D5C0046A121 /* 每天懂一点好玩心理学.epub in Resources */,
+				787DA8F9239F47B50046A121 /* LaunchScreen.storyboard in Resources */,
+				787DA8F6239F47B50046A121 /* Assets.xcassets in Resources */,
+				787DA8F4239F47B30046A121 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		787DA8FF239F47B50046A121 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		787DA90A239F47B50046A121 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BC999EBA481F04C61FB55428 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-EPudRead-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		787DA8E2239F47B30046A121 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				787DA8F1239F47B30046A121 /* ViewController.m in Sources */,
+				787DA8EB239F47B30046A121 /* AppDelegate.m in Sources */,
+				787DA937239FBCB80046A121 /* NSString+HTML.m in Sources */,
+				786E2D4423A09A6900A11F08 /* SLViewController.m in Sources */,
+				787DA923239F7C030046A121 /* GDataXMLNode.m in Sources */,
+				787DA938239FBCB80046A121 /* GTMNSString+HTML.m in Sources */,
+				787DA8FC239F47B50046A121 /* main.m in Sources */,
+				787DA928239FB1B00046A121 /* SLChapterModel.m in Sources */,
+				787DA931239FBBED0046A121 /* LSYReadParser.m in Sources */,
+				787DA8EE239F47B30046A121 /* SceneDelegate.m in Sources */,
+				787DA92F239FBBED0046A121 /* LSYReadConfig.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		787DA8FD239F47B50046A121 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				787DA906239F47B50046A121 /* EPudReadTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		787DA908239F47B50046A121 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				787DA911239F47B50046A121 /* EPudReadUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		787DA903239F47B50046A121 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 787DA8E5239F47B30046A121 /* EPudRead */;
+			targetProxy = 787DA902239F47B50046A121 /* PBXContainerItemProxy */;
+		};
+		787DA90E239F47B50046A121 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 787DA8E5239F47B30046A121 /* EPudRead */;
+			targetProxy = 787DA90D239F47B50046A121 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		787DA8F2239F47B30046A121 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				787DA8F3239F47B30046A121 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		787DA8F7239F47B50046A121 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				787DA8F8239F47B50046A121 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		787DA913239F47B50046A121 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		787DA914239F47B50046A121 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		787DA916239F47B50046A121 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F33E1E711C3CEAA194A1D6B1 /* Pods-EPudRead.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W47EBNCE5G;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/EpudRead/PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/SSZipArchive\"",
+					/usr/include/libxml2,
+				);
+				INFOPLIST_FILE = EPudRead/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = wsl.EPudRead;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		787DA917239F47B50046A121 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8AFDB471C21B16D225BB7D63 /* Pods-EPudRead.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W47EBNCE5G;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/EpudRead/PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/SSZipArchive\"",
+					/usr/include/libxml2,
+				);
+				INFOPLIST_FILE = EPudRead/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = wsl.EPudRead;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		787DA919239F47B50046A121 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W47EBNCE5G;
+				INFOPLIST_FILE = EPudReadTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = wsl.EPudReadTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EPudRead.app/EPudRead";
+			};
+			name = Debug;
+		};
+		787DA91A239F47B50046A121 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W47EBNCE5G;
+				INFOPLIST_FILE = EPudReadTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = wsl.EPudReadTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EPudRead.app/EPudRead";
+			};
+			name = Release;
+		};
+		787DA91C239F47B50046A121 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W47EBNCE5G;
+				INFOPLIST_FILE = EPudReadUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = wsl.EPudReadUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EPudRead;
+			};
+			name = Debug;
+		};
+		787DA91D239F47B50046A121 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W47EBNCE5G;
+				INFOPLIST_FILE = EPudReadUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = wsl.EPudReadUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EPudRead;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		787DA8E1239F47B30046A121 /* Build configuration list for PBXProject "EPudRead" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				787DA913239F47B50046A121 /* Debug */,
+				787DA914239F47B50046A121 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		787DA915239F47B50046A121 /* Build configuration list for PBXNativeTarget "EPudRead" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				787DA916239F47B50046A121 /* Debug */,
+				787DA917239F47B50046A121 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		787DA918239F47B50046A121 /* Build configuration list for PBXNativeTarget "EPudReadTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				787DA919239F47B50046A121 /* Debug */,
+				787DA91A239F47B50046A121 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		787DA91B239F47B50046A121 /* Build configuration list for PBXNativeTarget "EPudReadUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				787DA91C239F47B50046A121 /* Debug */,
+				787DA91D239F47B50046A121 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 787DA8DE239F47B30046A121 /* Project object */;
+}
