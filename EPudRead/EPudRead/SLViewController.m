@@ -7,8 +7,7 @@
 //
 
 #import "SLViewController.h"
-#import <YYText.h>
-
+#import "YYText.h"
 
 @interface SLTextView : UITextView
 
@@ -61,9 +60,9 @@
 @end
 
 
-@interface SLViewController () <UITextViewDelegate>
+@interface SLViewController () <UITextViewDelegate, YYTextViewDelegate>
 
-@property (nonatomic, strong) SLTextView *textView;
+@property (nonatomic, strong) YYTextView *textView;
 
 @property (nonatomic, strong) NSMutableArray *pagesArray;
 @property (nonatomic, assign) NSInteger currentPage;
@@ -93,9 +92,9 @@
 }
 
 #pragma mark - Getter
-- (SLTextView *)textView {
+- (YYTextView *)textView {
     if (!_textView) {
-        _textView = [[SLTextView alloc] initWithFrame:CGRectMake(0, 80, SL_kScreenWidth, SL_kScreenHeight - 80 - 20)];
+        _textView = [[YYTextView alloc] initWithFrame:CGRectMake(0, 80, SL_kScreenWidth, SL_kScreenHeight - 80 - 20)];
         _textView.editable = NO;
         _textView.delegate = self;
         //        _textView.selectable = NO;
@@ -155,25 +154,20 @@
         CGFloat newLocation = range.location - (currentTitleRange.length - attributeStr.length);
         SLImageData * imageData = model.imageArray[i];
         // 文字中加图片
-        NSTextAttachment *attachment=[[NSTextAttachment alloc] init];
-        UIImage *img = [UIImage imageWithContentsOfFile:imageData.url];
-        attachment.image = img;
-        attachment.bounds=CGRectMake(0, 0, SL_kScreenWidth, SL_kScreenWidth*img.size.height/img.size.width);
-        NSMutableAttributedString *attachmentStr = [[NSMutableAttributedString alloc] init];
-        //        [attachmentStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
-        [attachmentStr appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
-        //        [attachmentStr appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
-        //图片添加点击效果 特殊字符串编码
-        [attachmentStr addAttributes:@{NSLinkAttributeName:[imageData.url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]]} range:NSMakeRange(0, attachmentStr.length)];
-        [attributeStr replaceCharactersInRange:NSMakeRange(newLocation, range.length) withAttributedString:attachmentStr];
+        UIImage *image = [UIImage imageWithContentsOfFile:imageData.url];
+//        image = [UIImage imageWithCGImage:image.CGImage scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
+           NSMutableAttributedString *attachText = [NSMutableAttributedString yy_attachmentStringWithContent:image contentMode:UIViewContentModeScaleToFill attachmentSize:CGSizeMake(SL_kScreenWidth, SL_kScreenWidth*image.size.height/image.size.width) alignToFont:[UIFont systemFontOfSize:self.fontSize] alignment:YYTextVerticalAlignmentCenter];
+        [attributeStr replaceCharactersInRange:NSMakeRange(newLocation, range.length) withAttributedString:attachText];
     }
-    
+     
+    //分页
     self.pagesArray = [self coreTextPaging:attributeStr contentSize:CGRectMake(0, 0, self.textView.frame.size.width, self.textView.frame.size.height).size];
     
     if (self.currentPage > self.pagesArray.count - 1) {
         self.currentPage = self.pagesArray.count- 1 ;
     }
     self.textView.attributedText = self.pagesArray[self.currentPage];
+    
 }
 
 #pragma mark - Help Methods
@@ -196,24 +190,73 @@
     }
     return ranges;
 }
-// 文本和图片附件 分页计算
+//// 文本和图片附件 分页计算
 - (NSMutableArray *)coreTextPaging:(NSMutableAttributedString *)orginAttString contentSize:(CGSize)contentSize {
     NSMutableArray *pagingArray = [NSMutableArray array];
-    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:orginAttString];
-    NSLayoutManager* layoutManager = [[NSLayoutManager alloc] init];
-    [textStorage addLayoutManager:layoutManager];
-    while (YES) {
-        NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:contentSize];
-        [layoutManager addTextContainer:textContainer];
-        NSRange rang = [layoutManager glyphRangeForTextContainer:textContainer];
-        if (rang.length <= 0) {
-            break;
-        }
-        NSAttributedString *attStr =[textStorage attributedSubstringFromRange:rang];
+    YYTextContainer *textContainer = [YYTextContainer containerWithSize:contentSize];
+    CGFloat location = 0;
+    while (location < orginAttString.length) {
+        YYTextLayout* textLayout = [YYTextLayout layoutWithContainer:textContainer text:[orginAttString attributedSubstringFromRange:NSMakeRange(0, orginAttString.length - location)]];
+        NSRange rang =  [textLayout visibleRange];
+        NSAttributedString *attStr =[orginAttString attributedSubstringFromRange:NSMakeRange(location, rang.length)];
         [pagingArray addObject:attStr];
+        location+=rang.length;
+        NSLog(@"%f",location);
     }
     return pagingArray;
 }
+
+//- (NSArray *)pagingwithContentString:(NSString *)contentString contentSize:(CGSize)contentSize textAttribute:(NSDictionary *)textAttribute {
+//    NSMutableArray *pagingArray = [NSMutableArray array];
+//    NSMutableAttributedString *orginAttString = [[NSMutableAttributedString alloc] initWithString:contentString attributes:textAttribute];
+//    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:orginAttString];
+//    NSLayoutManager* layoutManager = [[NSLayoutManager alloc] init];
+//    [textStorage addLayoutManager:layoutManager];
+//
+//    while (YES) {
+//        NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:contentSize];
+//        [layoutManager addTextContainer:textContainer];
+//        NSRange rang = [layoutManager glyphRangeForTextContainer:textContainer];
+//        if (rang.length <= 0) {
+//            break;
+//        }
+//        NSAttributedString *attStr =[textStorage attributedSubstringFromRange:rang];
+//        [pagingArray addObject:attStr];
+//    }
+//    return pagingArray;
+//}
+//
+//- (NSArray *)coreTextPaging:(NSAttributedString *)str textFrame:(CGRect)textFrame{
+//    NSMutableArray *pagingResult = [NSMutableArray array];
+//    CFAttributedStringRef cfAttStr = (__bridge CFAttributedStringRef)str;
+//    //直接桥接，引用计数不变
+//    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(cfAttStr);
+//    CGPathRef path = CGPathCreateWithRect(textFrame, NULL);
+//
+//    int textPos = 0;
+//
+//    NSUInteger strLength = [str length];
+//    while (textPos < strLength) {
+//        //设置路径
+//        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPos, 0), path, NULL);
+//        //生成frame
+//        CFRange frameRange = CTFrameGetVisibleStringRange(frame);
+//        NSRange ra = NSMakeRange(frameRange.location, frameRange.length);
+//
+//        [pagingResult addObject:[str attributedSubstringFromRange:ra]];
+//
+//        //获取范围并转换为NSRange，然后以NSString形式保存
+//        textPos += frameRange.length;
+//        //移动当前文本位置
+//        CFRelease(frame);
+//    }
+//    CGPathRelease(path);
+//    CFRelease(framesetter);
+//    //释放frameSetter
+//    return pagingResult;
+//
+//}
+
 
 #pragma mark - UITextViewDelegate
 //点击链接

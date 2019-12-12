@@ -41,6 +41,9 @@
     NSString * fullPath = chapterpath;
     NSString* html = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL fileURLWithPath:fullPath]] encoding:NSUTF8StringEncoding];
     model.html = html;
+    
+    //        [[NSAttributedString alloc] initWithData:[html dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil] HTML 转换为纯富文本
+    
     //去掉html标签，保留图片信息
     model.content = [html stringByConvertingHTMLToPlainText];
     [model parserEpubToDictionary];
