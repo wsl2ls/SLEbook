@@ -15,7 +15,7 @@
 @end
 @implementation SLTextView
 
-/*
+
 - (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
@@ -57,7 +57,7 @@
     NSRange range = NSMakeRange(location, length);
     return range;
 }
-*/
+
 @end
 
 
@@ -97,9 +97,9 @@
     if (!_textView) {
         _textView = [[SLTextView alloc] initWithFrame:CGRectMake(0, 80, SL_kScreenWidth, SL_kScreenHeight - 80 - 20)];
         _textView.editable = NO;
-        _textView.delegate = self;
-        //        _textView.selectable = NO;
-        //        _textView.scrollEnabled = NO;
+//        _textView.delegate = self;
+//        _textView.selectable = NO;
+        _textView.scrollEnabled = NO;
         _textView.textContainerInset = UIEdgeInsetsZero;
         _textView.backgroundColor = [UIColor grayColor];
     }
@@ -222,7 +222,7 @@
     NSString *imagePath = [URL.absoluteString stringByRemovingPercentEncoding];
     NSLog(@"点击链接 %@", imagePath);
     UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
-    return NO;
+    return false;
 }
 
 /*

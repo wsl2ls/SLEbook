@@ -27,6 +27,8 @@
 		787DA937239FBCB80046A121 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA934239FBCB70046A121 /* NSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		787DA938239FBCB80046A121 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA936239FBCB80046A121 /* GTMNSString+HTML.m */; };
 		787DA93B239FCF030046A121 /* 中公开学APP.epub in Resources */ = {isa = PBXBuildFile; fileRef = 787DA93A239FCEEE0046A121 /* 中公开学APP.epub */; };
+		78A1978A23A33E2D00056A69 /* CoreTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A1978923A33E2D00056A69 /* CoreTextViewController.m */; };
+		78A1979023A3ABEA00056A69 /* SLCoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */; };
 		F4E5AAD03A991C2A76F85515 /* libPods-EPudRead.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7AC86ECE743D8A2DF0BD1D0 /* libPods-EPudRead.a */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +88,10 @@
 		787DA936239FBCB80046A121 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
 		787DA939239FBF480046A121 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		787DA93A239FCEEE0046A121 /* 中公开学APP.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "中公开学APP.epub"; sourceTree = "<group>"; };
+		78A1978823A33E2D00056A69 /* CoreTextViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreTextViewController.h; sourceTree = "<group>"; };
+		78A1978923A33E2D00056A69 /* CoreTextViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreTextViewController.m; sourceTree = "<group>"; };
+		78A1978E23A3ABEA00056A69 /* SLCoreTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLCoreTextView.h; sourceTree = "<group>"; };
+		78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLCoreTextView.m; sourceTree = "<group>"; };
 		8AFDB471C21B16D225BB7D63 /* Pods-EPudRead.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EPudRead.release.xcconfig"; path = "Target Support Files/Pods-EPudRead/Pods-EPudRead.release.xcconfig"; sourceTree = "<group>"; };
 		F33E1E711C3CEAA194A1D6B1 /* Pods-EPudRead.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EPudRead.debug.xcconfig"; path = "Target Support Files/Pods-EPudRead/Pods-EPudRead.debug.xcconfig"; sourceTree = "<group>"; };
 		F7AC86ECE743D8A2DF0BD1D0 /* libPods-EPudRead.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EPudRead.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -165,6 +171,10 @@
 				787DA8F0239F47B30046A121 /* ViewController.m */,
 				786E2D4223A09A6900A11F08 /* SLViewController.h */,
 				786E2D4323A09A6900A11F08 /* SLViewController.m */,
+				78A1978823A33E2D00056A69 /* CoreTextViewController.h */,
+				78A1978923A33E2D00056A69 /* CoreTextViewController.m */,
+				78A1978E23A3ABEA00056A69 /* SLCoreTextView.h */,
+				78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */,
 				787DA926239FB1B00046A121 /* SLChapterModel.h */,
 				787DA927239FB1B00046A121 /* SLChapterModel.m */,
 				787DA8F2239F47B30046A121 /* Main.storyboard */,
@@ -388,7 +398,9 @@
 				787DA938239FBCB80046A121 /* GTMNSString+HTML.m in Sources */,
 				787DA8FC239F47B50046A121 /* main.m in Sources */,
 				787DA928239FB1B00046A121 /* SLChapterModel.m in Sources */,
+				78A1978A23A33E2D00056A69 /* CoreTextViewController.m in Sources */,
 				787DA931239FBBED0046A121 /* LSYReadParser.m in Sources */,
+				78A1979023A3ABEA00056A69 /* SLCoreTextView.m in Sources */,
 				787DA8EE239F47B30046A121 /* SceneDelegate.m in Sources */,
 				787DA92F239FBBED0046A121 /* LSYReadConfig.m in Sources */,
 			);
