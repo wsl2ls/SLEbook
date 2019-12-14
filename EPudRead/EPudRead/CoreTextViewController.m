@@ -42,7 +42,7 @@
     SLChapterModel *chapterModel = self.chapterArray[0];
     
     // 绘制的内容属性字符串
-    NSString *text = @" 【APP】【学员、师资】扫一扫\n       【后台】互动管理、创建课程、创建小节、关联班级、统计数据【前台网页】seewo展示：互动管理、创建课程、创建章和小节、关联班级、统计数据【APP】【学员】参与互动课程和小节：互动课程列表、小节列表（章节）；互动详情页；（参与、结果）【H5】未下载app学  \n  还是哈哈哈";
+    NSString *text = chapterModel.content;
     NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:text];
     // 创建NSMutableParagraphStyle实例
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -57,6 +57,7 @@
     self.coreTextView.attributedString = attributeStr;
     self.coreTextView.imageArray = chapterModel.imageArray;
     [self.view addSubview:self.coreTextView];
+    self.coreTextView.contentSize = CGSizeMake(SL_kScreenWidth, SL_kScreenWidth *10);
     
 }
 

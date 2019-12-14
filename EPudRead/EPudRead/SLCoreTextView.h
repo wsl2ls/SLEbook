@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SLCoreTextView : UIView
+@interface SLCoreTextView : UIScrollView
 
 @property (nonatomic, strong) NSMutableAttributedString *attributedString; //富文本
 

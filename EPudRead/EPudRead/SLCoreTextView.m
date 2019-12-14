@@ -138,7 +138,6 @@ static CGFloat getWidth(void *ref) {
         }
     }
     
-    
 }
 
 @end
