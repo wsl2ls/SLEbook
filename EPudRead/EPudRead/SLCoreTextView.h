@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SLChapterModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,7 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSMutableAttributedString *attributedString; //富文本
 
-@property (nonatomic, strong) NSMutableDictionary *attributes;  //富文本属性
+@property (nonatomic, strong) NSDictionary *attributes;  //富文本属性
+
+@property (nonatomic,assign) CTFrameRef frameRef;
+
+@property (nonatomic, strong) NSArray <SLImageData *> * imageArray;
 
 @end
 

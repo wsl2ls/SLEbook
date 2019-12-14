@@ -17,6 +17,10 @@
 
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
+    
+    //添加图片文本
+    [self.attributedString insertAttributedString:[self imageAttributeString] atIndex:100];
+    
     //由于上下文(左下角)和设备屏幕(左上角)坐标系原点的不同，所以需要翻转一下
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
@@ -26,14 +30,21 @@
     // 绘制区域
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathAddRect(path, NULL, self.bounds);
-
+    
     // 使用NSMutableAttributedString创建CTFrame
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)self.attributedString);
-    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, self.attributedString.length), path, NULL);
+    self.frameRef = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, self.attributedString.length), path, NULL);
     
-
     // 使用CTFrame在CGContextRef上下文上绘制
-    CTFrameDraw(frame, context);
+    CTFrameDraw(self.frameRef, context);
+    
+    //计算图片位置
+    [self calculateImagePosition];
+    for (SLImageData *imageData in self.imageArray) {
+        //绘制图片
+        CGContextDrawImage(context, imageData.imageRect, [UIImage imageWithContentsOfFile:imageData.url].CGImage);
+    }
+    
 }
 
 // MARK: - CTRunDelegateCallbacks 回调方法
@@ -58,7 +69,7 @@ static CGFloat getWidth(void *ref) {
     callback.getWidth = getWidth;
     
     // 2 创建CTRunDelegateRef
-    NSDictionary *metaData = @{@"width": @120, @"height": @140};
+    NSDictionary *metaData = @{@"width": @100, @"height": @100};
     CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callback, (__bridge_retained void *)(metaData));
     
     // 3 设置占位使用的图片属性字符串
@@ -72,20 +83,19 @@ static CGFloat getWidth(void *ref) {
     return imagePlaceHolderAttributeString;
 }
 
-/*
 //计算图片所在的位置的代码：
 - (void)calculateImagePosition {
     
     int imageIndex = 0;
-    if (imageIndex >= self.richTextData.images.count) {
+    if (imageIndex >= self.imageArray.count) {
         return;
     }
     
     // CTFrameGetLines获取但CTFrame内容的行数
-    NSArray *lines = (NSArray *)CTFrameGetLines(self.richTextData.ctFrame);
+    NSArray *lines = (NSArray *)CTFrameGetLines(self.frameRef);
     // CTFrameGetLineOrigins获取每一行的起始点，保存在lineOrigins数组中
     CGPoint lineOrigins[lines.count];
-    CTFrameGetLineOrigins(self.richTextData.ctFrame, CFRangeMake(0, 0), lineOrigins);
+    CTFrameGetLineOrigins(self.frameRef, CFRangeMake(0, 0), lineOrigins);
     for (int i = 0; i < lines.count; i++) {
         CTLineRef line = (__bridge CTLineRef)lines[i];
         
@@ -116,18 +126,19 @@ static CGFloat getWidth(void *ref) {
             // CTLineGetOffsetForStringIndex获取CTRun的起始位置
             CGFloat xOffset = lineOrigins[i].x + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
             CGFloat yOffset = lineOrigins[i].y;
-         
+            
             // 更新ImageItem对象的位置
-            ImageItem *imageItem = self.richTextData.images[imageIndex];
-            imageItem.frame = CGRectMake(xOffset, yOffset, width, ascent + desent);
+            SLImageData *imageData = self.imageArray[imageIndex];
+            imageData.imageRect = CGRectMake(xOffset, yOffset, width, ascent + desent);
             
             imageIndex ++;
-            if (imageIndex >= self.richTextData.images.count) {
+            if (imageIndex >= self.imageArray.count) {
                 return;
             }
         }
     }
+    
+    
 }
-*/
 
 @end
