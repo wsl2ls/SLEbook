@@ -13,6 +13,9 @@
 
 @property (nonatomic, strong) SLCoreTextView *coreTextView;
 
+
+@property (nonatomic, strong) UIScrollView *scrollView;
+
 @property (nonatomic, strong) NSMutableArray *pagesArray;
 @property (nonatomic, assign) NSInteger currentPage;
 
@@ -41,33 +44,80 @@
     
     SLChapterModel *chapterModel = self.chapterArray[0];
     
-    // 绘制的内容属性字符串
     NSString *text = chapterModel.content;
+    
     NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:text];
     // 创建NSMutableParagraphStyle实例
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 5;       //行间距
     paragraphStyle.paragraphSpacing = 10;  //段落间距
-//    paragraphStyle.firstLineHeadIndent = 20; //首行缩进
-//    paragraphStyle.paragraphSpacingBefore = 50; //前段间距
+
+    NSDictionary *dict = @{NSParagraphStyleAttributeName:paragraphStyle, NSFontAttributeName:[UIFont systemFontOfSize:self.fontSize]};
     
-    self.coreTextView.attributes = @{NSParagraphStyleAttributeName:paragraphStyle, NSFontAttributeName:[UIFont systemFontOfSize:self.fontSize]};
-    [attributeStr addAttributes: self.coreTextView.attributes range:NSMakeRange(0, attributeStr.length)];
+    //替换图片富文本
+    NSArray *imagesRangs = [self getRangesFromResult:attributeStr.string];
+    NSRange currentTitleRange = NSMakeRange(0, attributeStr.length);
+    for (int i = 0; i < imagesRangs.count; i++) {
+        NSRange range = [imagesRangs[i] rangeValue];
+        //注意：每替换一次，原有的位置发生改变，下一轮替换的起点需要重新计算！
+        CGFloat newLocation = range.location - (currentTitleRange.length - attributeStr.length);
+        SLImageData * imageData = chapterModel.imageArray[i];
+        // 文字中加图片
+        UIImage *img = [UIImage imageWithContentsOfFile:imageData.url];
+        [attributeStr replaceCharactersInRange:NSMakeRange(newLocation, range.length) withAttributedString:[self.coreTextView imageAttributeString:CGSizeMake(SL_kScreenWidth, SL_kScreenWidth*img.size.height/img.size.width) withAttribute:dict]];
+    }
+    
+   
+    [attributeStr addAttributes:dict  range:NSMakeRange(0, attributeStr.length)];
 
     self.coreTextView.attributedString = attributeStr;
     self.coreTextView.imageArray = chapterModel.imageArray;
-    [self.view addSubview:self.coreTextView];
-    self.coreTextView.contentSize = CGSizeMake(SL_kScreenWidth, SL_kScreenWidth *10);
+    self.coreTextView.frame = CGRectMake(0, 0, SL_kScreenWidth, SL_kScreenHeight * 12);
+
+    [self.view addSubview:self.scrollView];
+    
+    [self.scrollView addSubview:self.coreTextView];
+    self.scrollView.contentSize = CGSizeMake(SL_kScreenWidth, self.coreTextView.frame.size.height);
     
 }
 
+#pragma mark - Help Methods
+
+/// 匹配图片标签<img>.*?</img>
+- (NSMutableArray *)getRangesFromResult:(NSString *)string {
+    NSMutableArray *ranges = [[NSMutableArray alloc] init];
+    NSError *error;
+    NSString *rangeRegex = @"<img>.*?</img>";
+    NSRegularExpression *regular = [NSRegularExpression regularExpressionWithPattern:rangeRegex options:0 error:&error];
+    if (!error) {
+        NSArray * results = [regular matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+        for (NSTextCheckingResult *match in results) {
+            NSString *result = [string substringWithRange:match.range];
+            NSLog(@"%@",result);
+            [ranges addObject: [NSValue valueWithRange:match.range]];
+        }
+    }else{
+        NSLog(@"error -- %@",error);
+    }
+    return ranges;
+}
+
+#pragma mark - Getter
 
 - (SLCoreTextView *)coreTextView {
     if (_coreTextView == nil) {
-        _coreTextView = [[SLCoreTextView alloc] initWithFrame:CGRectMake(0, 80, SL_kScreenWidth, SL_kScreenHeight - 80 - 20)];
+        _coreTextView = [[SLCoreTextView alloc] init];
         _coreTextView.backgroundColor = [UIColor grayColor];
     }
     return _coreTextView;
+}
+
+- (UIScrollView *)scrollView {
+    if (!_scrollView) {
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SL_kScreenWidth, SL_kScreenHeight)];
+        _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    return _scrollView;
 }
 
 /*

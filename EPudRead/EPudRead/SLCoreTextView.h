@@ -11,15 +11,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SLCoreTextView : UIScrollView
+@interface SLCoreTextView : UIView
 
 @property (nonatomic, strong) NSMutableAttributedString *attributedString; //富文本
-
-@property (nonatomic, strong) NSDictionary *attributes;  //富文本属性
 
 @property (nonatomic,assign) CTFrameRef frameRef;
 
 @property (nonatomic, strong) NSArray <SLImageData *> * imageArray;
+
+@property (nonatomic, assign) CGFloat textHeight; //富文本的高
+
+//返回图片属性字符串
+- (NSAttributedString *)imageAttributeString:(CGSize)contenSize withAttribute:(NSDictionary *)attribute;
 
 @end
 
