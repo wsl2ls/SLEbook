@@ -9,7 +9,7 @@
 #import "SLCoreTextView.h"
 
 @interface SLCoreTextView ()
-
+@property (nonatomic,assign) CTFrameRef frameRef;
 @end
 
 @implementation SLCoreTextView
@@ -19,6 +19,9 @@
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     [self drawFrame];
+}
+- (void)dealloc {
+    CFRelease(self.frameRef);
 }
 - (void)drawFrame{
     // 使用NSMutableAttributedString创建CTFrame
@@ -103,53 +106,57 @@ static CGFloat getWidth(void *ref) {
     if (imageIndex >= self.imageArray.count) {
         return;
     }
-    
-    // CTFrameGetLines获取但CTFrame内容的行数
-    NSArray *lines = (NSArray *)CTFrameGetLines(self.frameRef);
-    // CTFrameGetLineOrigins获取每一行的起始点，保存在lineOrigins数组中
-    CGPoint lineOrigins[lines.count];
-    CTFrameGetLineOrigins(self.frameRef, CFRangeMake(0, 0), lineOrigins);
-    for (int i = 0; i < lines.count; i++) {
-        CTLineRef line = (__bridge CTLineRef)lines[i];
+    @autoreleasepool {
         
-        NSArray *runs = (NSArray *)CTLineGetGlyphRuns(line);
-        for (int j = 0; j < runs.count; j++) {
-            CTRunRef run = (__bridge CTRunRef)(runs[j]);
-            NSDictionary *attributes = (NSDictionary *)CTRunGetAttributes(run);
-            if (!attributes) {
-                continue;
-            }
-            // 从属性中获取到创建属性字符串使用CFAttributedStringSetAttribute设置的delegate值
-            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[attributes valueForKey:(id)kCTRunDelegateAttributeName];
-            if (!delegate) {
-                continue;
-            }
-            // CTRunDelegateGetRefCon方法从delegate中获取使用CTRunDelegateCreate初始时候设置的元数据
-            NSDictionary *metaData = (NSDictionary *)CTRunDelegateGetRefCon(delegate);
-            if (!metaData) {
-                continue;
-            }
+        // CTFrameGetLines获取但CTFrame内容的行数
+        NSArray *lines = (NSArray *)CTFrameGetLines(self.frameRef);
+        // CTFrameGetLineOrigins获取每一行的起始点，保存在lineOrigins数组中
+        CGPoint lineOrigins[lines.count];
+        CTFrameGetLineOrigins(self.frameRef, CFRangeMake(0, 0), lineOrigins);
+        for (int i = 0; i < lines.count; i++) {
+            CTLineRef line = (__bridge CTLineRef)lines[i];
             
-            // 找到代理则开始计算图片位置信息
-            CGFloat ascent;
-            CGFloat desent;
-            // 可以直接从metaData获取到图片的宽度和高度信息
-            CGFloat width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &desent, NULL);
-            
-            // CTLineGetOffsetForStringIndex获取CTRun的起始位置
-            CGFloat xOffset = lineOrigins[i].x + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
-            CGFloat yOffset = lineOrigins[i].y;
-            
-            // 更新ImageItem对象的位置
-            SLImageData *imageData = self.imageArray[imageIndex];
-            imageData.imageRect = CGRectMake(xOffset, yOffset, width, ascent + desent);
-            
-            imageIndex ++;
-            if (imageIndex >= self.imageArray.count) {
-                return;
+            NSArray *runs = (NSArray *)CTLineGetGlyphRuns(line);
+            for (int j = 0; j < runs.count; j++) {
+                CTRunRef run = (__bridge CTRunRef)(runs[j]);
+                NSDictionary *attributes = (NSDictionary *)CTRunGetAttributes(run);
+                if (!attributes) {
+                    continue;
+                }
+                // 从属性中获取到创建属性字符串使用CFAttributedStringSetAttribute设置的delegate值
+                CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[attributes valueForKey:(id)kCTRunDelegateAttributeName];
+                if (!delegate) {
+                    continue;
+                }
+                // CTRunDelegateGetRefCon方法从delegate中获取使用CTRunDelegateCreate初始时候设置的元数据
+                NSDictionary *metaData = (NSDictionary *)CTRunDelegateGetRefCon(delegate);
+                if (!metaData) {
+                    continue;
+                }
+                
+                // 找到代理则开始计算图片位置信息
+                CGFloat ascent;
+                CGFloat desent;
+                // 可以直接从metaData获取到图片的宽度和高度信息
+                CGFloat width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &desent, NULL);
+                
+                // CTLineGetOffsetForStringIndex获取CTRun的起始位置
+                CGFloat xOffset = lineOrigins[i].x + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
+                CGFloat yOffset = lineOrigins[i].y;
+                
+                // 更新ImageItem对象的位置
+                SLImageData *imageData = self.imageArray[imageIndex];
+                imageData.imageRect = CGRectMake(xOffset, yOffset, width, ascent + desent);
+                
+                imageIndex ++;
+                if (imageIndex >= self.imageArray.count) {
+                    return;
+                }
             }
         }
+        
     }
+    
 }
 
 @end

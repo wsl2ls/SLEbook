@@ -15,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSMutableAttributedString *attributedString; //富文本
 
-@property (nonatomic,assign) CTFrameRef frameRef;
-
 @property (nonatomic, strong) NSArray <SLImageData *> * imageArray;
 
 @property (nonatomic, assign) CGFloat textHeight; //富文本的高

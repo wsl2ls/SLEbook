@@ -51,7 +51,6 @@
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 5;       //行间距
     paragraphStyle.paragraphSpacing = 10;  //段落间距
-
     NSDictionary *dict = @{NSParagraphStyleAttributeName:paragraphStyle, NSFontAttributeName:[UIFont systemFontOfSize:self.fontSize]};
     
     //替换图片富文本
@@ -67,13 +66,11 @@
         [attributeStr replaceCharactersInRange:NSMakeRange(newLocation, range.length) withAttributedString:[self.coreTextView imageAttributeString:CGSizeMake(SL_kScreenWidth, SL_kScreenWidth*img.size.height/img.size.width) withAttribute:dict]];
     }
     
-   
     [attributeStr addAttributes:dict  range:NSMakeRange(0, attributeStr.length)];
 
     self.coreTextView.attributedString = attributeStr;
     self.coreTextView.imageArray = chapterModel.imageArray;
     self.coreTextView.frame = CGRectMake(0, 0, SL_kScreenWidth, SL_kScreenHeight * 12);
-
     [self.view addSubview:self.scrollView];
     
     [self.scrollView addSubview:self.coreTextView];
