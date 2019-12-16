@@ -29,6 +29,7 @@
 		787DA93B239FCF030046A121 /* 中公开学APP.epub in Resources */ = {isa = PBXBuildFile; fileRef = 787DA93A239FCEEE0046A121 /* 中公开学APP.epub */; };
 		78A1978A23A33E2D00056A69 /* CoreTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A1978923A33E2D00056A69 /* CoreTextViewController.m */; };
 		78A1979023A3ABEA00056A69 /* SLCoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */; };
+		78E923C023A76482002BF5DF /* r_drag-dot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 78E923BF23A76481002BF5DF /* r_drag-dot@2x.png */; };
 		F4E5AAD03A991C2A76F85515 /* libPods-EPudRead.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7AC86ECE743D8A2DF0BD1D0 /* libPods-EPudRead.a */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +93,7 @@
 		78A1978923A33E2D00056A69 /* CoreTextViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreTextViewController.m; sourceTree = "<group>"; };
 		78A1978E23A3ABEA00056A69 /* SLCoreTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLCoreTextView.h; sourceTree = "<group>"; };
 		78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLCoreTextView.m; sourceTree = "<group>"; };
+		78E923BF23A76481002BF5DF /* r_drag-dot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "r_drag-dot@2x.png"; sourceTree = "<group>"; };
 		8AFDB471C21B16D225BB7D63 /* Pods-EPudRead.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EPudRead.release.xcconfig"; path = "Target Support Files/Pods-EPudRead/Pods-EPudRead.release.xcconfig"; sourceTree = "<group>"; };
 		F33E1E711C3CEAA194A1D6B1 /* Pods-EPudRead.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EPudRead.debug.xcconfig"; path = "Target Support Files/Pods-EPudRead/Pods-EPudRead.debug.xcconfig"; sourceTree = "<group>"; };
 		F7AC86ECE743D8A2DF0BD1D0 /* libPods-EPudRead.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EPudRead.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +154,7 @@
 				787DA920239F7C030046A121 /* GDataXML */,
 				787DA91E239F4D530046A121 /* 每天懂一点好玩心理学.epub */,
 				787DA93A239FCEEE0046A121 /* 中公开学APP.epub */,
+				78E923BF23A76481002BF5DF /* r_drag-dot@2x.png */,
 				786E2D4523A0CF8400A11F08 /* lufei.png */,
 				787DA939239FBF480046A121 /* PrefixHeader.pch */,
 				787DA933239FBCB70046A121 /* GTMDefines.h */,
@@ -339,6 +342,7 @@
 				786E2D4623A0CF8400A11F08 /* lufei.png in Resources */,
 				787DA91F239F4D5C0046A121 /* 每天懂一点好玩心理学.epub in Resources */,
 				787DA8F9239F47B50046A121 /* LaunchScreen.storyboard in Resources */,
+				78E923C023A76482002BF5DF /* r_drag-dot@2x.png in Resources */,
 				787DA8F6239F47B50046A121 /* Assets.xcassets in Resources */,
 				787DA8F4239F47B30046A121 /* Main.storyboard in Resources */,
 			);

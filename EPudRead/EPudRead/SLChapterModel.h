@@ -11,7 +11,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 章节里的图片数据
+/// 富文本配置
+@interface SLReadConfig : NSObject
++(instancetype)shareInstance;
+@property (nonatomic) CGFloat fontSize;  //字体大小
+@property (nonatomic) CGFloat lineSpace; //行间距
+@property (nonatomic,strong) UIColor *fontColor; //字体颜色
+@property (nonatomic,strong) UIColor *theme;  //主题 背景色
+@end
+
+
+/// 图片数据
 @interface SLImageData : NSObject
 @property (nonatomic,strong) NSString *url; //图片链接
 @property (nonatomic,assign) CGRect imageRect;  //图片位置

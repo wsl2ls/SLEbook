@@ -41,17 +41,20 @@
     UIBarButtonItem *littleFontItem = [[UIBarButtonItem alloc] initWithTitle:@"小" style:UIBarButtonItemStyleDone target:self action:@selector(littleFont)];
     self.navigationItem.rightBarButtonItems = @[littleFontItem , bigFontItem ,nextItem, previousItem];
     
+    [SLReadConfig shareInstance].fontSize = self.fontSize;
+      [SLReadConfig shareInstance].lineSpace = 5;
+      [SLReadConfig shareInstance].fontColor = [UIColor blackColor];
+      [SLReadConfig shareInstance].theme = [UIColor orangeColor];
     
     SLChapterModel *chapterModel = self.chapterArray[0];
-    
     NSString *text = chapterModel.content;
     
     NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:text];
     // 创建NSMutableParagraphStyle实例
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = 5;       //行间距
-    paragraphStyle.paragraphSpacing = 10;  //段落间距
-    NSDictionary *dict = @{NSParagraphStyleAttributeName:paragraphStyle, NSFontAttributeName:[UIFont systemFontOfSize:self.fontSize]};
+    paragraphStyle.lineSpacing = [SLReadConfig shareInstance].lineSpace;       //行间距
+//    paragraphStyle.paragraphSpacing = 10;  //段落间距
+    NSDictionary *dict = @{NSParagraphStyleAttributeName:paragraphStyle, NSFontAttributeName:[UIFont systemFontOfSize:[SLReadConfig shareInstance].fontSize], NSForegroundColorAttributeName:[SLReadConfig shareInstance].fontColor};
     
     //替换图片富文本
     NSArray *imagesRangs = [self getRangesFromResult:attributeStr.string];
@@ -70,7 +73,8 @@
 
     self.coreTextView.attributedString = attributeStr;
     self.coreTextView.imageArray = chapterModel.imageArray;
-    self.coreTextView.frame = CGRectMake(0, 0, SL_kScreenWidth, SL_kScreenHeight * 12);
+    self.coreTextView.backgroundColor = [SLReadConfig shareInstance].theme;
+    self.coreTextView.frame = CGRectMake(0, 0, SL_kScreenWidth, SL_kScreenHeight);
     [self.view addSubview:self.scrollView];
     
     [self.scrollView addSubview:self.coreTextView];
@@ -80,7 +84,7 @@
 
 #pragma mark - Help Methods
 
-/// 匹配图片标签<img>.*?</img>
+/// 匹配图片标签<img></img>
 - (NSMutableArray *)getRangesFromResult:(NSString *)string {
     NSMutableArray *ranges = [[NSMutableArray alloc] init];
     NSError *error;
@@ -103,8 +107,7 @@
 
 - (SLCoreTextView *)coreTextView {
     if (_coreTextView == nil) {
-        _coreTextView = [[SLCoreTextView alloc] init];
-        _coreTextView.backgroundColor = [UIColor grayColor];
+        _coreTextView = [[SLCoreTextView alloc] initWithFrame:CGRectZero];
     }
     return _coreTextView;
 }

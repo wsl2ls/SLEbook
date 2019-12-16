@@ -11,11 +11,23 @@
 #import "LSYReadParser.h"
 #import "NSString+HTML.h"
 
+@interface SLReadConfig()
+@end
+@implementation SLReadConfig
++(instancetype)shareInstance {
+    static SLReadConfig *readConfig = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        readConfig = [[self alloc] init];
+    });
+    return readConfig;
+}
+@end
+
 @interface SLImageData ()
 @end
 @implementation SLImageData
 @end
-
 
 @interface SLChapterModel ()
 @property (nonatomic,strong) NSMutableArray *pageArray;
