@@ -16,7 +16,7 @@
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 
-@property (nonatomic, strong) NSMutableArray *pagesArray;
+@property (nonatomic, strong) NSArray *pagesArray;
 @property (nonatomic, assign) NSInteger currentPage;
 
 @property (nonatomic, assign) CGFloat fontSize;
@@ -68,22 +68,22 @@
         UIImage *img = [UIImage imageWithContentsOfFile:imageData.url];
         [attributeStr replaceCharactersInRange:NSMakeRange(newLocation, range.length) withAttributedString:[self.coreTextView imageAttributeString:CGSizeMake(SL_kScreenWidth, SL_kScreenWidth*img.size.height/img.size.width) withAttribute:dict]];
     }
-    
     [attributeStr addAttributes:dict  range:NSMakeRange(0, attributeStr.length)];
 
-    self.coreTextView.attributedString = attributeStr;
-    self.coreTextView.imageArray = chapterModel.imageArray;
+//    self.coreTextView.imageArray = chapterModel.imageArray;
     self.coreTextView.backgroundColor = [SLReadConfig shareInstance].theme;
-    self.coreTextView.frame = CGRectMake(0, 0, SL_kScreenWidth, SL_kScreenHeight);
-    [self.view addSubview:self.scrollView];
+    self.coreTextView.frame = CGRectMake(0, 80, SL_kScreenWidth, SL_kScreenHeight- 80 );
+    [self.view addSubview:self.coreTextView];
     
-    [self.scrollView addSubview:self.coreTextView];
-    self.scrollView.contentSize = CGSizeMake(SL_kScreenWidth, self.coreTextView.frame.size.height);
+    self.pagesArray = [self coreTextPaging:attributeStr textBounds:self.coreTextView.bounds];
+    self.coreTextView.attributedString = self.pagesArray.firstObject;
+    
+//    [self.scrollView addSubview:self.coreTextView];
+//    self.scrollView.contentSize = CGSizeMake(SL_kScreenWidth, self.coreTextView.frame.size.height);
     
 }
 
 #pragma mark - Help Methods
-
 /// 匹配图片标签<img></img>
 - (NSMutableArray *)getRangesFromResult:(NSString *)string {
     NSMutableArray *ranges = [[NSMutableArray alloc] init];
@@ -102,34 +102,36 @@
     }
     return ranges;
 }
-- (NSArray *)coreTextPaging:(NSAttributedString *)str textFrame:(CGRect)textFrame{
-    NSMutableArray *pagingResult = [NSMutableArray array];
-    CFAttributedStringRef cfAttStr = (__bridge CFAttributedStringRef)str;
-    //直接桥接，引用计数不变
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(cfAttStr);
-    CGPathRef path = CGPathCreateWithRect(textFrame, NULL);
-
-    int textPos = 0;
-
-    NSUInteger strLength = [str length];
-    while (textPos < strLength) {
-        //设置路径
-        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPos, 0), path, NULL);
-        //生成frame
-        CFRange frameRange = CTFrameGetVisibleStringRange(frame);
-        NSRange ra = NSMakeRange(frameRange.location, frameRange.length);
-
-        [pagingResult addObject:[str attributedSubstringFromRange:ra]];
-
-        //获取范围并转换为NSRange，然后以NSString形式保存
-        textPos += frameRange.length;
-        //移动当前文本位置
-        CFRelease(frame);
-    }
-    CGPathRelease(path);
-    CFRelease(framesetter);
-    //释放frameSetter
-    return pagingResult;
+//分页计算
+- (NSArray *)coreTextPaging:(NSAttributedString *)attrString textBounds:(CGRect)textBounds{
+     NSMutableArray *pagingResult = [NSMutableArray array];
+      CFAttributedStringRef cfAttStr = (__bridge CFAttributedStringRef)attrString;
+      //直接桥接，引用计数不变
+      CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(cfAttStr);
+      CGPathRef path = CGPathCreateWithRect(textBounds, NULL);
+      int textPos = 0;
+      NSUInteger strLength = [attrString length];
+      while (textPos < strLength) {
+          //设置路径
+          CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPos, 0), path, NULL);
+          //生成frame
+          CFRange frameRange = CTFrameGetVisibleStringRange(frame);
+          NSRange ra = NSMakeRange(frameRange.location, frameRange.length);
+          
+          if(ra.length == 0) {
+              ra.length +=1;
+          }
+          [pagingResult addObject:[attrString attributedSubstringFromRange:ra]];
+          
+          //获取范围并转换为NSRange，然后以NSString形式保存
+          textPos += ra.length;
+          //移动当前文本位置
+          CFRelease(frame);
+      }
+      CGPathRelease(path);
+      CFRelease(framesetter);
+      //释放frameSetter
+      return pagingResult;
 }
 
 
@@ -151,7 +153,37 @@
 }
 
 
-#pragma mark - Events Handle
+#pragma mark - Event Handle
+- (void)previousPage {
+    if (self.currentPage - 1 >= 0) {
+        self.currentPage = self.currentPage - 1;
+    }else {
+        self.currentPage = self.pagesArray.count - 1;
+    }
+    self.coreTextView.attributedString = self.pagesArray[self.currentPage];
+}
+- (void)nextPage {
+    if (self.currentPage + 1 < self.pagesArray.count) {
+        self.currentPage = self.currentPage + 1;
+    }else {
+        self.currentPage = 0;
+    }
+    self.coreTextView.attributedString = self.pagesArray[self.currentPage];
+}
+- (void)bigFont {
+    self.fontSize+=5;
+    [self update];
+}
+- (void)littleFont {
+    self.fontSize-=5;
+    [self update];
+}
+
+- (void)update {
+    
+    
+    
+}
 
 
 

@@ -105,6 +105,11 @@
 - (BOOL)canBecomeFirstResponder {
     return YES;
 }
+#pragma mark - Setter
+- (void)setAttributedString:(NSMutableAttributedString *)attributedString {
+    _attributedString = attributedString;
+    [self setNeedsDisplay];
+}
 #pragma mark - Getter
 - (CGFloat)textHeight {
     // 使用NSMutableAttributedString创建CTFrame
