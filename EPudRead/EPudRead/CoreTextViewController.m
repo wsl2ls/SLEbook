@@ -102,6 +102,36 @@
     }
     return ranges;
 }
+- (NSArray *)coreTextPaging:(NSAttributedString *)str textFrame:(CGRect)textFrame{
+    NSMutableArray *pagingResult = [NSMutableArray array];
+    CFAttributedStringRef cfAttStr = (__bridge CFAttributedStringRef)str;
+    //直接桥接，引用计数不变
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(cfAttStr);
+    CGPathRef path = CGPathCreateWithRect(textFrame, NULL);
+
+    int textPos = 0;
+
+    NSUInteger strLength = [str length];
+    while (textPos < strLength) {
+        //设置路径
+        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPos, 0), path, NULL);
+        //生成frame
+        CFRange frameRange = CTFrameGetVisibleStringRange(frame);
+        NSRange ra = NSMakeRange(frameRange.location, frameRange.length);
+
+        [pagingResult addObject:[str attributedSubstringFromRange:ra]];
+
+        //获取范围并转换为NSRange，然后以NSString形式保存
+        textPos += frameRange.length;
+        //移动当前文本位置
+        CFRelease(frame);
+    }
+    CGPathRelease(path);
+    CFRelease(framesetter);
+    //释放frameSetter
+    return pagingResult;
+}
+
 
 #pragma mark - Getter
 
@@ -119,6 +149,12 @@
     }
     return _scrollView;
 }
+
+
+#pragma mark - Events Handle
+
+
+
 
 /*
  #pragma mark - Navigation
