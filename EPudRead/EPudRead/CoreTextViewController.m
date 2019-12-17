@@ -43,53 +43,12 @@
     UIBarButtonItem *littleFontItem = [[UIBarButtonItem alloc] initWithTitle:@"小" style:UIBarButtonItemStyleDone target:self action:@selector(littleFont)];
     self.navigationItem.rightBarButtonItems = @[littleFontItem , bigFontItem ,nextItem, previousItem];
     
-    [SLReadConfig shareInstance].fontSize = self.fontSize;
-    [SLReadConfig shareInstance].lineSpace = 10;
-    [SLReadConfig shareInstance].fontColor = [UIColor blackColor];
-    [SLReadConfig shareInstance].theme = [UIColor orangeColor];
-    
     SLChapterModel *chapterModel = self.chapterArray[0];
     _currentChapter = chapterModel;
-    NSString *text = chapterModel.content;
     
-    //富文本
-    NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:text];
-    
-    // 创建NSMutableParagraphStyle实例
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = [SLReadConfig shareInstance].lineSpace;       //行间距
-    //    paragraphStyle.paragraphSpacing = 10;  //段落间距
-    NSDictionary *dict = @{NSParagraphStyleAttributeName:paragraphStyle, NSFontAttributeName:[UIFont systemFontOfSize:[SLReadConfig shareInstance].fontSize], NSForegroundColorAttributeName:[SLReadConfig shareInstance].fontColor};
-    
-    //图片标签替换为图片占位符
-    NSArray *imagesRangs = [self getRangesFromResult:attributeStr.string];
-    NSRange currentTitleRange = NSMakeRange(0, attributeStr.length);
-    for (int i = 0; i < imagesRangs.count; i++) {
-        NSRange range = [imagesRangs[i] rangeValue];
-        //注意：每替换一次，原有的位置发生改变，下一轮替换的起点需要重新计算！
-        CGFloat newLocation = range.location - (currentTitleRange.length - attributeStr.length);
-        SLImageData * imageData = chapterModel.imageArray[i];
-        //该图片占位符的索引
-        imageData.position = newLocation+1;
-        // 文字中加入图片占位符
-        UIImage *img = [UIImage imageWithContentsOfFile:imageData.url];
-        CGSize imageSize = CGSizeMake(SL_kScreenWidth, SL_kScreenWidth*img.size.height/img.size.width);
-        NSMutableAttributedString *placeHolder = [[NSMutableAttributedString alloc] initWithAttributedString:[self.coreTextView imageAttributeString:imageSize withAttribute:dict]];
-        //设置默认位置，是为了解决全屏时执行calculateImagePosition计算占位图位置失效的问题
-        imageData.imageRect = CGRectMake(0, 0, imageSize.width, imageSize.height);
-        [attributeStr replaceCharactersInRange:NSMakeRange(newLocation, range.length) withAttributedString:placeHolder];
-    }
-    [attributeStr addAttributes:dict  range:NSMakeRange(0, attributeStr.length)];
-    
-    self.coreTextView.backgroundColor = [SLReadConfig shareInstance].theme;
     self.coreTextView.frame = CGRectMake(0, 80, SL_kScreenWidth, SL_kScreenHeight-80);
     [self.view addSubview:self.coreTextView];
-    
-    //获取分页后的数据
-    self.pagesArray = [self coreTextPaging:attributeStr textBounds:self.coreTextView.bounds];
-    
-    self.coreTextView.imageArray = self.pagesArray.firstObject[@"images"];
-    self.coreTextView.attributedString = self.pagesArray.firstObject[@"Text"];
+    [self update];
     
     //    [self.scrollView addSubview:self.coreTextView];
     //    self.scrollView.contentSize = CGSizeMake(SL_kScreenWidth, self.coreTextView.frame.size.height);
@@ -98,7 +57,7 @@
 
 #pragma mark - Help Methods
 /// 匹配图片标签<img></img> 获取所有
-- (NSMutableArray *)getRangesFromResult:(NSString *)string {
+- (NSMutableArray *)getImagesRangesFromResult:(NSString *)string {
     NSMutableArray *ranges = [[NSMutableArray alloc] init];
     NSError *error;
     NSString *rangeRegex = @"<img>.*?</img>";
@@ -175,6 +134,7 @@
     }
     self.coreTextView.imageArray = self.pagesArray[self.currentPage][@"images"];
     self.coreTextView.attributedString = self.pagesArray[self.currentPage][@"Text"];
+    self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];
 }
 - (void)nextPage {
     if (self.currentPage + 1 < self.pagesArray.count) {
@@ -184,6 +144,7 @@
     }
     self.coreTextView.imageArray = self.pagesArray[self.currentPage][@"images"];
     self.coreTextView.attributedString = self.pagesArray[self.currentPage][@"Text"];
+    self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];
 }
 - (void)bigFont {
     self.fontSize+=5;
@@ -195,9 +156,55 @@
 }
 - (void)update {
     
+    //阅读效果配置
+    [SLReadConfig shareInstance].fontSize = self.fontSize;
+    [SLReadConfig shareInstance].lineSpace = 10;
+    [SLReadConfig shareInstance].fontColor = [UIColor blackColor];
+    [SLReadConfig shareInstance].theme = [UIColor orangeColor];
     
+    //章节内容
+    NSString *text = _currentChapter.content;
     
+    //富文本
+    NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:text];
+    
+    // 创建NSMutableParagraphStyle实例
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = [SLReadConfig shareInstance].lineSpace;       //行间距
+    //    paragraphStyle.paragraphSpacing = 10;  //段落间距
+    NSDictionary *dict = @{NSParagraphStyleAttributeName:paragraphStyle, NSFontAttributeName:[UIFont systemFontOfSize:[SLReadConfig shareInstance].fontSize], NSForegroundColorAttributeName:[SLReadConfig shareInstance].fontColor};
+    
+    //图片标签替换为图片占位符
+    NSArray *imagesRangs = [self getImagesRangesFromResult:attributeStr.string];
+    NSRange currentTitleRange = NSMakeRange(0, attributeStr.length);
+    for (int i = 0; i < imagesRangs.count; i++) {
+        NSRange range = [imagesRangs[i] rangeValue];
+        //注意：每替换一次，原有的位置发生改变，下一轮替换的起点需要重新计算！
+        CGFloat newLocation = range.location - (currentTitleRange.length - attributeStr.length);
+        SLImageData * imageData = _currentChapter.imageArray[i];
+        //该图片占位符的索引
+        imageData.position = newLocation+1;
+        // 文字中加入图片占位符
+        UIImage *img = [UIImage imageWithContentsOfFile:imageData.url];
+        CGSize imageSize = CGSizeMake(SL_kScreenWidth, SL_kScreenWidth*img.size.height/img.size.width);
+        NSMutableAttributedString *placeHolder = [[NSMutableAttributedString alloc] initWithAttributedString:[self.coreTextView imageAttributeString:imageSize withAttribute:dict]];
+        //设置默认位置，是为了解决全屏时执行calculateImagePosition计算占位图位置失效的问题
+        imageData.imageRect = CGRectMake(0, 0, imageSize.width, imageSize.height);
+        [attributeStr replaceCharactersInRange:NSMakeRange(newLocation, range.length) withAttributedString:placeHolder];
+    }
+    [attributeStr addAttributes:dict  range:NSMakeRange(0, attributeStr.length)];
+    
+    self.coreTextView.backgroundColor = [SLReadConfig shareInstance].theme;
+    
+    //获取分页后的数据
+    self.pagesArray = [self coreTextPaging:attributeStr textBounds:self.coreTextView.bounds];
+    if(self.currentPage > self.pagesArray.count - 1) {
+        self.currentPage = self.pagesArray.count - 1;
+    }
+    self.coreTextView.imageArray = self.pagesArray[self.currentPage][@"images"];
+    self.coreTextView.attributedString = self.pagesArray[self.currentPage][@"Text"];
+    
+    self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];
 }
-
 
 @end

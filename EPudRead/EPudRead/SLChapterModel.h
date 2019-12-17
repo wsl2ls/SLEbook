@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong) NSString *content;  //章节文本内容 和 图片标签
 @property (nonatomic,strong) NSString *title;   // 章节标题
-@property (nonatomic, assign) NSUInteger pageCount;  //页码
+@property (nonatomic, assign) NSUInteger pageCount;  //页数
 
 @property (nonatomic, copy) NSString *epubImagePath; //图片所在的相对路径
 

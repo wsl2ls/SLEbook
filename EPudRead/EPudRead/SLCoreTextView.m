@@ -108,14 +108,16 @@
 #pragma mark - CoreText绘制
 //绘制内容
 - (void)drawFrame {
-    // 使用NSMutableAttributedString创建CTFrame
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)self.attributedString);
-    
+    if(self.attributedString.length == 0) {
+        return;
+    }
     //注意：一定要先释放，否则内存会一直增长
     if (self.frameRef) {
         CFRelease(self.frameRef);
         _frameRef = nil;
     }
+    // 使用NSMutableAttributedString创建CTFrame
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)self.attributedString);
     // 绘制区域
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathAddRect(path, NULL, CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height));
@@ -202,6 +204,7 @@
 #pragma mark - Setter
 - (void)setAttributedString:(NSMutableAttributedString *)attributedString {
     _attributedString = attributedString;
+    [self resetUserInteraction];
     [self setNeedsDisplay];
 }
 #pragma mark - Getter
@@ -276,16 +279,26 @@
     
 }
 -(void)menuCopy:(id)sender {
-    
+    [self resetUserInteraction];
 }
 -(void)menuNote:(id)sender {
-    
+    [self resetUserInteraction];
 }
 -(void)menuShare:(id)sender {
-    
+    [self resetUserInteraction];
 }
 
 #pragma mark - Help Methods
+//重置用户交互内容
+- (void)resetUserInteraction {
+    _menuRect = CGRectZero;
+    _selectState = NO;
+    _selectRange = NSMakeRange(0, 0);
+    _pathArray = nil;
+    _pan.enabled = NO;
+    _leftRect = CGRectZero;
+    _rightRect = CGRectZero;
+}
 //展示放大镜
 -(void)showMagnifier {
     if (!_magnifierView) {
