@@ -105,6 +105,100 @@
 - (BOOL)canBecomeFirstResponder {
     return YES;
 }
+#pragma mark - CoreText绘制
+//绘制内容
+- (void)drawFrame {
+    // 使用NSMutableAttributedString创建CTFrame
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)self.attributedString);
+    
+    //注意：一定要先释放，否则内存会一直增长
+    if (self.frameRef) {
+        CFRelease(self.frameRef);
+        _frameRef = nil;
+    }
+    // 绘制区域
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height));
+    self.frameRef = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, self.attributedString.length), path, NULL);
+    
+    //由于上下文(左下角)和设备屏幕(左上角)坐标系原点的不同，所以需要翻转一下
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+    CGContextTranslateCTM(context, 0, self.bounds.size.height);
+    CGContextScaleCTM(context, 1, -1);
+    
+    //给选中的部分添加背景色
+    CGRect leftDot,rightDot = CGRectZero;
+    [self drawSelectedPath:_pathArray LeftDot:&leftDot RightDot:&rightDot];
+    
+    // 使用CTFrame在CGContextRef上下文上绘制
+    CTFrameDraw(self.frameRef, context);
+    
+    //计算图片位置
+    [self calculateImagePosition];
+    for (SLImageData *imageData in self.imageArray) {
+        //绘制图片
+        CGContextDrawImage(context, imageData.imageRect, [UIImage imageWithContentsOfFile:imageData.url].CGImage);
+    }
+    
+    //绘制选中左右分割图
+    [self drawDotWithLeft:leftDot right:rightDot];
+    
+    CFRelease(framesetter);
+    CFRelease(path);
+}
+// 给选中区域绘制背景色
+-(void)drawSelectedPath:(NSArray *)array LeftDot:(CGRect *)leftDot RightDot:(CGRect *)rightDot{
+    if (!array.count) {
+        _pan.enabled = NO;
+        //        if ([self.delegate respondsToSelector:@selector(readViewEndEdit:)]) {
+        //            [self.delegate readViewEndEdit:nil];
+        //        }
+        [self hiddenMagnifier];
+        return;
+    }
+    //    if ([self.delegate respondsToSelector:@selector(readViewEditeding:)]) {
+    //        [self.delegate readViewEditeding:nil];
+    //    }
+    _pan.enabled = YES;
+    CGMutablePathRef _path = CGPathCreateMutable();
+    [[UIColor redColor] setFill];
+    for (int i = 0; i < [array count]; i++) {
+        CGRect rect = CGRectFromString([array objectAtIndex:i]);
+        CGPathAddRect(_path, NULL, rect);
+        if (i == 0) {
+            *leftDot = rect;
+            _menuRect = rect;
+        }
+        if (i == [array count]-1) {
+            *rightDot = rect;
+        }
+    }
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextAddPath(ctx, _path);
+    CGContextFillPath(ctx);
+    CGPathRelease(_path);
+}
+//绘制选中区间的左右分割点
+-(void)drawDotWithLeft:(CGRect)Left right:(CGRect)right {
+    if (CGRectEqualToRect(CGRectZero, Left) || (CGRectEqualToRect(CGRectZero, right))){
+        return;
+    }
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGMutablePathRef _path = CGPathCreateMutable();
+    [[UIColor orangeColor] setFill];
+    CGPathAddRect(_path, NULL, CGRectMake(CGRectGetMinX(Left)-2, CGRectGetMinY(Left),2, CGRectGetHeight(Left)));
+    CGPathAddRect(_path, NULL, CGRectMake(CGRectGetMaxX(right), CGRectGetMinY(right),2, CGRectGetHeight(right)));
+    CGContextAddPath(ctx, _path);
+    CGContextFillPath(ctx);
+    CGPathRelease(_path);
+    CGFloat dotSize = 15;
+    _leftRect = CGRectMake(CGRectGetMinX(Left)-dotSize/2-10, self.bounds.size.height-(CGRectGetMaxY(Left)-dotSize/2-10)-(dotSize+20), dotSize+20, dotSize+20);
+    _rightRect = CGRectMake(CGRectGetMaxX(right)-dotSize/2-10,self.bounds.size.height- (CGRectGetMinY(right)-dotSize/2-10)-(dotSize+20), dotSize+20, dotSize+20);
+    CGContextDrawImage(ctx,CGRectMake(CGRectGetMinX(Left)-dotSize/2, CGRectGetMaxY(Left)-dotSize/2, dotSize, dotSize),[UIImage imageNamed:@"r_drag-dot"].CGImage);
+    CGContextDrawImage(ctx,CGRectMake(CGRectGetMaxX(right)-dotSize/2, CGRectGetMinY(right)-dotSize/2, dotSize, dotSize),[UIImage imageNamed:@"r_drag-dot"].CGImage);
+}
+
 #pragma mark - Setter
 - (void)setAttributedString:(NSMutableAttributedString *)attributedString {
     _attributedString = attributedString;
@@ -129,6 +223,9 @@
     if (longPress.state == UIGestureRecognizerStateBegan || longPress.state == UIGestureRecognizerStateChanged) {
         //选中位置坐标，坐标原点是左下角 需要转换
         CGRect rect = [self parserRectWithPoint:point range:&_selectRange frameRef:self.frameRef];
+        if(CGRectEqualToRect(rect, CGRectZero)) {
+            return;
+        }
         _menuRect = rect;
         [self showMagnifier];
         self.magnifierView.touchPoint = point;
@@ -224,100 +321,6 @@
     }
 }
 
-#pragma mark - CoreText绘制
-//绘制内容
-- (void)drawFrame {
-    // 使用NSMutableAttributedString创建CTFrame
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)self.attributedString);
-    
-    //注意：一定要先释放，否则内存会一直增长
-    if (self.frameRef) {
-        CFRelease(self.frameRef);
-        _frameRef = nil;
-    }
-    // 绘制区域
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL, CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height));
-    self.frameRef = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, self.attributedString.length), path, NULL);
-    
-    //由于上下文(左下角)和设备屏幕(左上角)坐标系原点的不同，所以需要翻转一下
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-    CGContextTranslateCTM(context, 0, self.bounds.size.height);
-    CGContextScaleCTM(context, 1, -1);
-    
-    //给选中的部分添加背景色
-    CGRect leftDot,rightDot = CGRectZero;
-    [self drawSelectedPath:_pathArray LeftDot:&leftDot RightDot:&rightDot];
-    
-    // 使用CTFrame在CGContextRef上下文上绘制
-    CTFrameDraw(self.frameRef, context);
-    
-    //计算图片位置
-    [self calculateImagePosition];
-    for (SLImageData *imageData in self.imageArray) {
-        //绘制图片
-        CGContextDrawImage(context, imageData.imageRect, [UIImage imageWithContentsOfFile:imageData.url].CGImage);
-    }
-    
-    //绘制选中左右分割图
-    [self drawDotWithLeft:leftDot right:rightDot];
-    
-    CFRelease(framesetter);
-    CFRelease(path);
-}
-// 给选中区域绘制背景色
--(void)drawSelectedPath:(NSArray *)array LeftDot:(CGRect *)leftDot RightDot:(CGRect *)rightDot{
-    if (!array.count) {
-        _pan.enabled = NO;
-        //        if ([self.delegate respondsToSelector:@selector(readViewEndEdit:)]) {
-        //            [self.delegate readViewEndEdit:nil];
-        //        }
-        [self hiddenMagnifier];
-        return;
-    }
-    //    if ([self.delegate respondsToSelector:@selector(readViewEditeding:)]) {
-    //        [self.delegate readViewEditeding:nil];
-    //    }
-    _pan.enabled = YES;
-    CGMutablePathRef _path = CGPathCreateMutable();
-    [[UIColor redColor] setFill];
-    for (int i = 0; i < [array count]; i++) {
-        CGRect rect = CGRectFromString([array objectAtIndex:i]);
-        CGPathAddRect(_path, NULL, rect);
-        if (i == 0) {
-            *leftDot = rect;
-            _menuRect = rect;
-        }
-        if (i == [array count]-1) {
-            *rightDot = rect;
-        }
-    }
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextAddPath(ctx, _path);
-    CGContextFillPath(ctx);
-    CGPathRelease(_path);
-}
-//绘制选中区间的左右分割点
--(void)drawDotWithLeft:(CGRect)Left right:(CGRect)right {
-    if (CGRectEqualToRect(CGRectZero, Left) || (CGRectEqualToRect(CGRectZero, right))){
-        return;
-    }
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGMutablePathRef _path = CGPathCreateMutable();
-    [[UIColor orangeColor] setFill];
-    CGPathAddRect(_path, NULL, CGRectMake(CGRectGetMinX(Left)-2, CGRectGetMinY(Left),2, CGRectGetHeight(Left)));
-    CGPathAddRect(_path, NULL, CGRectMake(CGRectGetMaxX(right), CGRectGetMinY(right),2, CGRectGetHeight(right)));
-    CGContextAddPath(ctx, _path);
-    CGContextFillPath(ctx);
-    CGPathRelease(_path);
-    CGFloat dotSize = 15;
-    _leftRect = CGRectMake(CGRectGetMinX(Left)-dotSize/2-10, self.bounds.size.height-(CGRectGetMaxY(Left)-dotSize/2-10)-(dotSize+20), dotSize+20, dotSize+20);
-    _rightRect = CGRectMake(CGRectGetMaxX(right)-dotSize/2-10,self.bounds.size.height- (CGRectGetMinY(right)-dotSize/2-10)-(dotSize+20), dotSize+20, dotSize+20);
-    CGContextDrawImage(ctx,CGRectMake(CGRectGetMinX(Left)-dotSize/2, CGRectGetMaxY(Left)-dotSize/2, dotSize, dotSize),[UIImage imageNamed:@"r_drag-dot"].CGImage);
-    CGContextDrawImage(ctx,CGRectMake(CGRectGetMaxX(right)-dotSize/2, CGRectGetMinY(right)-dotSize/2, dotSize, dotSize),[UIImage imageNamed:@"r_drag-dot"].CGImage);
-}
-
 #pragma mark - CoreText计算
 // CTRunDelegateCallbacks 回调方法
 static CGFloat getAscent(void *ref) {
@@ -361,54 +364,53 @@ static CGFloat getWidth(void *ref) {
     if (imageIndex >= self.imageArray.count) {
         return;
     }
-    @autoreleasepool {
-        // CTFrameGetLines获取但CTFrame内容的行数
-        NSArray *lines = (NSArray *)CTFrameGetLines(self.frameRef);
-        // CTFrameGetLineOrigins获取每一行的起始点，保存在lineOrigins数组中
-        CGPoint lineOrigins[lines.count];
-        CTFrameGetLineOrigins(self.frameRef, CFRangeMake(0, 0), lineOrigins);
-        for (int i = 0; i < lines.count; i++) {
-            CTLineRef line = (__bridge CTLineRef)lines[i];
+    // CTFrameGetLines获取但CTFrame内容的行数
+    NSArray *lines = (NSArray *)CTFrameGetLines(self.frameRef);
+    //如果self.attributedString只是图片占位字符，则lines为nil
+    if (lines.count == 0 && self.attributedString != nil) {
+    }
+    // CTFrameGetLineOrigins获取每一行的起始点，保存在lineOrigins数组中
+    CGPoint lineOrigins[lines.count];
+    CTFrameGetLineOrigins(self.frameRef, CFRangeMake(0, 0), lineOrigins);
+    for (int i = 0; i < lines.count; i++) {
+        CTLineRef line = (__bridge CTLineRef)lines[i];
+        NSArray *runs = (NSArray *)CTLineGetGlyphRuns(line);
+        for (int j = 0; j < runs.count; j++) {
+            CTRunRef run = (__bridge CTRunRef)(runs[j]);
+            NSDictionary *attributes = (NSDictionary *)CTRunGetAttributes(run);
+            if (!attributes) {
+                continue;
+            }
+            // 从属性中获取到创建属性字符串使用CFAttributedStringSetAttribute设置的delegate值
+            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[attributes valueForKey:(id)kCTRunDelegateAttributeName];
+            if (!delegate) {
+                continue;
+            }
+            // CTRunDelegateGetRefCon方法从delegate中获取使用CTRunDelegateCreate初始时候设置的元数据
+            NSDictionary *metaData = (NSDictionary *)CTRunDelegateGetRefCon(delegate);
+            if (!metaData) {
+                continue;
+            }
             
-            NSArray *runs = (NSArray *)CTLineGetGlyphRuns(line);
-            for (int j = 0; j < runs.count; j++) {
-                CTRunRef run = (__bridge CTRunRef)(runs[j]);
-                NSDictionary *attributes = (NSDictionary *)CTRunGetAttributes(run);
-                if (!attributes) {
-                    continue;
-                }
-                // 从属性中获取到创建属性字符串使用CFAttributedStringSetAttribute设置的delegate值
-                CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[attributes valueForKey:(id)kCTRunDelegateAttributeName];
-                if (!delegate) {
-                    continue;
-                }
-                // CTRunDelegateGetRefCon方法从delegate中获取使用CTRunDelegateCreate初始时候设置的元数据
-                NSDictionary *metaData = (NSDictionary *)CTRunDelegateGetRefCon(delegate);
-                if (!metaData) {
-                    continue;
-                }
-                
-                // 找到代理则开始计算图片位置信息
-                CGFloat ascent;
-                CGFloat desent;
-                // 可以直接从metaData获取到图片的宽度和高度信息
-                CGFloat width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &desent, NULL);
-                
-                // CTLineGetOffsetForStringIndex获取CTRun的起始位置
-                CGFloat xOffset = lineOrigins[i].x + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
-                CGFloat yOffset = lineOrigins[i].y;
-                
-                // 更新ImageItem对象的位置
-                SLImageData *imageData = self.imageArray[imageIndex];
-                imageData.imageRect = CGRectMake(xOffset, yOffset, width, ascent + desent);
-                
-                imageIndex ++;
-                if (imageIndex >= self.imageArray.count) {
-                    return;
-                }
+            // 找到代理则开始计算图片位置信息
+            CGFloat ascent;
+            CGFloat desent;
+            // 可以直接从metaData获取到图片的宽度和高度信息
+            CGFloat width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &desent, NULL);
+            
+            // CTLineGetOffsetForStringIndex获取CTRun的起始位置
+            CGFloat xOffset = lineOrigins[i].x + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);
+            CGFloat yOffset = lineOrigins[i].y;
+            
+            // 更新ImageItem对象的位置
+            SLImageData *imageData = self.imageArray[imageIndex];
+            imageData.imageRect = CGRectMake(xOffset, yOffset, width, ascent + desent);
+            
+            imageIndex ++;
+            if (imageIndex >= self.imageArray.count) {
+                return;
             }
         }
-        
     }
     
 }
@@ -462,7 +464,7 @@ static CGFloat getWidth(void *ref) {
     return rect;
 }
 
-///  返回 选中的内容路径数组
+///  改变选中内容时，所有选中的内容路径数组
 /// @param point 触摸点
 /// @param selectRange 选中文本范围
 /// @param frameRef 帧内容

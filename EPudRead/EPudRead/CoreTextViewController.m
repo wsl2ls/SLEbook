@@ -17,9 +17,11 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 
 @property (nonatomic, strong) NSArray *pagesArray;
-@property (nonatomic, assign) NSInteger currentPage;
+@property (nonatomic, assign) NSInteger currentPage; //当前章节的页码
 
 @property (nonatomic, assign) CGFloat fontSize;
+
+@property (nonatomic, strong) SLChapterModel *currentChapter; //当前章节
 
 @end
 
@@ -42,21 +44,24 @@
     self.navigationItem.rightBarButtonItems = @[littleFontItem , bigFontItem ,nextItem, previousItem];
     
     [SLReadConfig shareInstance].fontSize = self.fontSize;
-      [SLReadConfig shareInstance].lineSpace = 5;
-      [SLReadConfig shareInstance].fontColor = [UIColor blackColor];
-      [SLReadConfig shareInstance].theme = [UIColor orangeColor];
+    [SLReadConfig shareInstance].lineSpace = 10;
+    [SLReadConfig shareInstance].fontColor = [UIColor blackColor];
+    [SLReadConfig shareInstance].theme = [UIColor orangeColor];
     
     SLChapterModel *chapterModel = self.chapterArray[0];
+    _currentChapter = chapterModel;
     NSString *text = chapterModel.content;
     
+    //富文本
     NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:text];
+    
     // 创建NSMutableParagraphStyle实例
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = [SLReadConfig shareInstance].lineSpace;       //行间距
-//    paragraphStyle.paragraphSpacing = 10;  //段落间距
+    //    paragraphStyle.paragraphSpacing = 10;  //段落间距
     NSDictionary *dict = @{NSParagraphStyleAttributeName:paragraphStyle, NSFontAttributeName:[UIFont systemFontOfSize:[SLReadConfig shareInstance].fontSize], NSForegroundColorAttributeName:[SLReadConfig shareInstance].fontColor};
     
-    //替换图片富文本
+    //图片标签替换为图片占位符
     NSArray *imagesRangs = [self getRangesFromResult:attributeStr.string];
     NSRange currentTitleRange = NSMakeRange(0, attributeStr.length);
     for (int i = 0; i < imagesRangs.count; i++) {
@@ -64,27 +69,35 @@
         //注意：每替换一次，原有的位置发生改变，下一轮替换的起点需要重新计算！
         CGFloat newLocation = range.location - (currentTitleRange.length - attributeStr.length);
         SLImageData * imageData = chapterModel.imageArray[i];
-        // 文字中加图片
+        //该图片占位符的索引
+        imageData.position = newLocation+1;
+        // 文字中加入图片占位符
         UIImage *img = [UIImage imageWithContentsOfFile:imageData.url];
-        [attributeStr replaceCharactersInRange:NSMakeRange(newLocation, range.length) withAttributedString:[self.coreTextView imageAttributeString:CGSizeMake(SL_kScreenWidth, SL_kScreenWidth*img.size.height/img.size.width) withAttribute:dict]];
+        CGSize imageSize = CGSizeMake(SL_kScreenWidth, SL_kScreenWidth*img.size.height/img.size.width);
+        NSMutableAttributedString *placeHolder = [[NSMutableAttributedString alloc] initWithAttributedString:[self.coreTextView imageAttributeString:imageSize withAttribute:dict]];
+        //设置默认位置，是为了解决全屏时执行calculateImagePosition计算占位图位置失效的问题
+        imageData.imageRect = CGRectMake(0, 0, imageSize.width, imageSize.height);
+        [attributeStr replaceCharactersInRange:NSMakeRange(newLocation, range.length) withAttributedString:placeHolder];
     }
     [attributeStr addAttributes:dict  range:NSMakeRange(0, attributeStr.length)];
-
-//    self.coreTextView.imageArray = chapterModel.imageArray;
+    
     self.coreTextView.backgroundColor = [SLReadConfig shareInstance].theme;
-    self.coreTextView.frame = CGRectMake(0, 80, SL_kScreenWidth, SL_kScreenHeight- 80 );
+    self.coreTextView.frame = CGRectMake(0, 80, SL_kScreenWidth, SL_kScreenHeight-80);
     [self.view addSubview:self.coreTextView];
     
+    //获取分页后的数据
     self.pagesArray = [self coreTextPaging:attributeStr textBounds:self.coreTextView.bounds];
-    self.coreTextView.attributedString = self.pagesArray.firstObject;
     
-//    [self.scrollView addSubview:self.coreTextView];
-//    self.scrollView.contentSize = CGSizeMake(SL_kScreenWidth, self.coreTextView.frame.size.height);
+    self.coreTextView.imageArray = self.pagesArray.firstObject[@"images"];
+    self.coreTextView.attributedString = self.pagesArray.firstObject[@"Text"];
+    
+    //    [self.scrollView addSubview:self.coreTextView];
+    //    self.scrollView.contentSize = CGSizeMake(SL_kScreenWidth, self.coreTextView.frame.size.height);
     
 }
 
 #pragma mark - Help Methods
-/// 匹配图片标签<img></img>
+/// 匹配图片标签<img></img> 获取所有
 - (NSMutableArray *)getRangesFromResult:(NSString *)string {
     NSMutableArray *ranges = [[NSMutableArray alloc] init];
     NSError *error;
@@ -102,48 +115,49 @@
     }
     return ranges;
 }
-//分页计算
+//分页计算 存储每一页的文本和图片
 - (NSArray *)coreTextPaging:(NSAttributedString *)attrString textBounds:(CGRect)textBounds{
-     NSMutableArray *pagingResult = [NSMutableArray array];
-      CFAttributedStringRef cfAttStr = (__bridge CFAttributedStringRef)attrString;
-      //直接桥接，引用计数不变
-      CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(cfAttStr);
-      CGPathRef path = CGPathCreateWithRect(textBounds, NULL);
-      int textPos = 0;
-      NSUInteger strLength = [attrString length];
-      while (textPos < strLength) {
-          //设置路径
-          CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPos, 0), path, NULL);
-          //生成frame
-          CFRange frameRange = CTFrameGetVisibleStringRange(frame);
-          NSRange ra = NSMakeRange(frameRange.location, frameRange.length);
-          
-          if(ra.length == 0) {
-              ra.length +=1;
-          }
-          [pagingResult addObject:[attrString attributedSubstringFromRange:ra]];
-          
-          //获取范围并转换为NSRange，然后以NSString形式保存
-          textPos += ra.length;
-          //移动当前文本位置
-          CFRelease(frame);
-      }
-      CGPathRelease(path);
-      CFRelease(framesetter);
-      //释放frameSetter
-      return pagingResult;
+    NSMutableArray *pagingResult = [NSMutableArray array];
+    CFAttributedStringRef cfAttStr = (__bridge CFAttributedStringRef)attrString;
+    //直接桥接，引用计数不变
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(cfAttStr);
+    CGPathRef path = CGPathCreateWithRect(textBounds, NULL);
+    int textPos = 0;
+    NSUInteger strLength = [attrString length];
+    while (textPos < strLength) {
+        //设置路径
+        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPos, 0), path, NULL);
+        //生成frame
+        CFRange frameRange = CTFrameGetVisibleStringRange(frame);
+        NSRange ra = NSMakeRange(frameRange.location, frameRange.length);
+        //如果图片占位大小铺满了整个视图，则获取的可见字符串长度为0，就会造成死循环
+        if(ra.length == 0) {
+            ra.length +=1;
+        }
+        NSMutableArray *images = [NSMutableArray array];
+        for (SLImageData *imageData in _currentChapter.imageArray) {
+            if (ra.location < imageData.position && imageData.position <= ra.location + ra.length  ) {
+                [images addObject:imageData];
+            }
+        }
+        [pagingResult addObject:@{@"Text":[attrString attributedSubstringFromRange:ra], @"images":[NSArray arrayWithArray:images]}];
+        textPos += ra.length;
+        //移动当前文本位置
+        CFRelease(frame);
+    }
+    CGPathRelease(path);
+    CFRelease(framesetter);
+    //释放frameSetter
+    return pagingResult;
 }
 
-
 #pragma mark - Getter
-
 - (SLCoreTextView *)coreTextView {
     if (_coreTextView == nil) {
         _coreTextView = [[SLCoreTextView alloc] initWithFrame:CGRectZero];
     }
     return _coreTextView;
 }
-
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SL_kScreenWidth, SL_kScreenHeight)];
@@ -152,7 +166,6 @@
     return _scrollView;
 }
 
-
 #pragma mark - Event Handle
 - (void)previousPage {
     if (self.currentPage - 1 >= 0) {
@@ -160,7 +173,8 @@
     }else {
         self.currentPage = self.pagesArray.count - 1;
     }
-    self.coreTextView.attributedString = self.pagesArray[self.currentPage];
+    self.coreTextView.imageArray = self.pagesArray[self.currentPage][@"images"];
+    self.coreTextView.attributedString = self.pagesArray[self.currentPage][@"Text"];
 }
 - (void)nextPage {
     if (self.currentPage + 1 < self.pagesArray.count) {
@@ -168,7 +182,8 @@
     }else {
         self.currentPage = 0;
     }
-    self.coreTextView.attributedString = self.pagesArray[self.currentPage];
+    self.coreTextView.imageArray = self.pagesArray[self.currentPage][@"images"];
+    self.coreTextView.attributedString = self.pagesArray[self.currentPage][@"Text"];
 }
 - (void)bigFont {
     self.fontSize+=5;
@@ -178,24 +193,11 @@
     self.fontSize-=5;
     [self update];
 }
-
 - (void)update {
     
     
     
 }
 
-
-
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 @end

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SLImageData : NSObject
 @property (nonatomic,strong) NSString *url; //图片链接
 @property (nonatomic,assign) CGRect imageRect;  //图片位置
-@property (nonatomic,assign) NSInteger position;
+@property (nonatomic,assign) NSInteger position;  //该图片占位字符的索引
 
 @end
 
@@ -36,12 +36,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSString *title;   // 章节标题
 @property (nonatomic, assign) NSUInteger pageCount;  //页码
 
-@property (nonatomic, copy) NSString *epubImagePath; // 
+@property (nonatomic, copy) NSString *epubImagePath; //图片所在的相对路径
 
 @property (nonatomic,copy) NSString *chapterpath; // 章节路径
 @property (nonatomic,copy) NSString *html;  //HTML字符串
 
-@property (nonatomic,copy) NSArray <SLImageData *> *imageArray;  // 图片
+@property (nonatomic,copy) NSArray <SLImageData *> *imageArray;  // 该章节包含的图片
 
 +(id)chapterWithEpub:(NSString *)chapterpath title:(NSString *)title imagePath:(NSString *)path;
 
