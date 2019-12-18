@@ -55,7 +55,12 @@
     model.html = html;
     //去掉html标签，保留图片信息
     model.content = [html stringByConvertingHTMLToPlainText];
-//    [model parserEpubToDictionary];
+    
+//    NSData *data = [html dataUsingEncoding:NSUnicodeStringEncoding];
+//    NSDictionary* options = @{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType};
+//    NSMutableAttributedString* attrs = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:nil error:nil];
+    
+    [model parserEpubToDictionary];
     return model;
 }
 

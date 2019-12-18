@@ -201,7 +201,7 @@
         self.currentPage = self.pagesArray.count - 1;
     }
     self.coreTextView.imageArray = self.pagesArray[self.currentPage][@"images"];
-    self.coreTextView.linkRanges;
+//    self.coreTextView.linkRanges;
     self.coreTextView.attributedString = self.pagesArray[self.currentPage][@"Text"];
     
     self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];

@@ -323,6 +323,8 @@
     _leftRect = CGRectZero;
     _rightRect = CGRectZero;
     [self setNeedsDisplay];
+    [self hiddenMenu];
+    [self hiddenMagnifier];
 }
 //展示放大镜
 -(void)showMagnifier {
