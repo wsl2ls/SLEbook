@@ -30,7 +30,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.fontSize = 20;
-    
     [self setupUI];
 }
 
@@ -159,7 +158,7 @@
     //阅读效果配置
     [SLReadConfig shareInstance].fontSize = self.fontSize;
     [SLReadConfig shareInstance].lineSpace = 10;
-    [SLReadConfig shareInstance].fontColor = [UIColor blackColor];
+    [SLReadConfig shareInstance].fontColor = [UIColor purpleColor];
     [SLReadConfig shareInstance].theme = [UIColor orangeColor];
     
     //章节内容
@@ -202,6 +201,7 @@
         self.currentPage = self.pagesArray.count - 1;
     }
     self.coreTextView.imageArray = self.pagesArray[self.currentPage][@"images"];
+    self.coreTextView.linkRanges;
     self.coreTextView.attributedString = self.pagesArray[self.currentPage][@"Text"];
     
     self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];

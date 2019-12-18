@@ -17,7 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSArray <SLImageData *> * imageArray;
 
-@property (nonatomic, assign) CGFloat textHeight; //富文本的高
+@property (nonatomic, strong) NSArray * linkRanges; //所有的链接
+
+@property (nonatomic, assign, readonly) CGFloat textHeight; //富文本的高度
 
 //返回图片属性字符串
 - (NSAttributedString *)imageAttributeString:(CGSize)contenSize withAttribute:(NSDictionary *)attribute;

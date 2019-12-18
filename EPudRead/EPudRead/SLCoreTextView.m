@@ -46,7 +46,7 @@
     BOOL _direction; //滑动方向  (0---左侧滑动 1 ---右侧滑动)
     
     NSRange _selectRange;  //选中的内容区间
-    NSRange _calRange;
+//    NSRange _calRange;
     NSArray *_pathArray; //选中的路径数组
     
     UIPanGestureRecognizer *_pan;
@@ -90,6 +90,11 @@
         _pan = pan;
         pan;
     })];
+    //点击手势
+       [self addGestureRecognizer:({
+           UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+           tap;
+       })];
 }
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
@@ -137,7 +142,7 @@
     CTFrameDraw(self.frameRef, context);
     
     //计算图片位置
-    [self calculateImagePosition];
+    [self calculateImageRect];
     for (SLImageData *imageData in self.imageArray) {
         //绘制图片
         CGContextDrawImage(context, imageData.imageRect, [UIImage imageWithContentsOfFile:imageData.url].CGImage);
@@ -213,9 +218,8 @@
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)self.attributedString);
     //计算富文本的实际高
     CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, self.attributedString.length), NULL, CGSizeMake(self.bounds.size.width, MAXFLOAT), NULL);
-    _textHeight = suggestedSize.height;
     CFRelease(framesetter);
-    return _textHeight;
+    return suggestedSize.height;
 }
 
 #pragma mark - Events Handle
@@ -278,6 +282,26 @@
     }
     
 }
+//点击事件
+- (void)tapAction:(UITapGestureRecognizer *)tap {
+    if (!_selectState) {
+        [self resetUserInteraction];
+    }
+    //点击的屏幕坐标
+    CGPoint point = [tap locationInView:self];
+    for (SLImageData *imageData in self.imageArray) {
+        //imageData.imageRect的坐标系原点是左下角
+        if (CGRectContainsPoint(imageData.imageRect, CGPointMake(point.x, self.bounds.size.height - point.y))) {
+            NSLog(@"点击了图片");
+            return;
+        }
+    }
+    
+   //点击处的文本索引
+   CFIndex index =  [self parserIndexWithPoint:point frameRef:self.frameRef];
+    NSString *tapString = index < 0 ? @"点击空白处":[self.attributedString attributedSubstringFromRange:NSMakeRange(index, 1)].string;
+   NSLog(@"点击了文字: %@",tapString);
+}
 -(void)menuCopy:(id)sender {
     [self resetUserInteraction];
 }
@@ -298,6 +322,7 @@
     _pan.enabled = NO;
     _leftRect = CGRectZero;
     _rightRect = CGRectZero;
+    [self setNeedsDisplay];
 }
 //展示放大镜
 -(void)showMagnifier {
@@ -371,8 +396,8 @@ static CGFloat getWidth(void *ref) {
     return imagePlaceHolderAttributeString;
 }
 
-//计算图片所在的位置
-- (void)calculateImagePosition {
+//计算图片所在的位置 注意:获得的图片位置坐标系是左下角
+- (void)calculateImageRect {
     int imageIndex = 0;
     if (imageIndex >= self.imageArray.count) {
         return;
@@ -542,7 +567,7 @@ static CGFloat getWidth(void *ref) {
     free(origins);
     return newPaths;
 }
-/// 返回 某坐标点的文本 在总文本中的索引
+/// 返回 某坐标点文本 在总文本中的索引
 - (CFIndex)parserIndexWithPoint:(CGPoint)point frameRef:(CTFrameRef)frameRef {
     CFIndex index = -1;
     CGPathRef pathRef = CTFrameGetPath(frameRef);

@@ -55,7 +55,7 @@
     model.html = html;
     //去掉html标签，保留图片信息
     model.content = [html stringByConvertingHTMLToPlainText];
-    [model parserEpubToDictionary];
+//    [model parserEpubToDictionary];
     return model;
 }
 
