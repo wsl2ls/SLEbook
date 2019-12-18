@@ -154,6 +154,7 @@
     
     CFRelease(framesetter);
     CFRelease(path);
+
 }
 //绘制背景色
 -(void)drawBackcolorPath:(NSArray *)array LeftDot:(CGRect *)leftDot RightDot:(CGRect *)rightDot{
@@ -228,7 +229,7 @@
 #pragma mark - Setter
 - (void)setAttributedString:(NSMutableAttributedString *)attributedString {
     _attributedString = attributedString;
-    [self resetUserInteraction];
+    [self cancelSelected];
     [self setNeedsDisplay];
 }
 #pragma mark - Getter
@@ -304,7 +305,7 @@
 //点击事件
 - (void)tapAction:(UITapGestureRecognizer *)tap {
     if (!_selectState) {
-        [self resetUserInteraction];
+        [self cancelSelected];
         [self setNeedsDisplay];
     }
     //点击的屏幕坐标
@@ -328,29 +329,28 @@
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
         pasteboard.string = [self.attributedString attributedSubstringFromRange:self->_selectRange].string;
     });
-    [self resetUserInteraction];
+    [self cancelSelected];
     [self setNeedsDisplay];
 }
 //笔记
 -(void)menuNote:(id)sender {
     _notePathArray = [self stringPathsWithRange:_selectRange];
     [self setNeedsDisplay];
-    [self resetUserInteraction];
+    [self cancelSelected];
 }
 //分享
 -(void)menuShare:(id)sender {
-    [self resetUserInteraction];
+    [self cancelSelected];
     [self setNeedsDisplay];
 }
 
 #pragma mark - Help Methods
-//重置用户交互内容
-- (void)resetUserInteraction {
+//取消选中
+- (void)cancelSelected {
     _menuRect = CGRectZero;
     _selectState = NO;
     _selectRange = NSMakeRange(0, 0);
     _selectPathArray = nil;
-//    _notePathArray = nil;
     _pan.enabled = NO;
     _leftRect = CGRectZero;
     _rightRect = CGRectZero;
@@ -543,9 +543,7 @@ static CGFloat getWidth(void *ref) {
 -(NSArray *)parserRectsWithPoint:(CGPoint)point range:(NSRange *)selectRange frameRef:(CTFrameRef)frameRef direction:(BOOL) direction {
     CFIndex index = -1;
     NSArray *lines = (__bridge NSArray *)CTFrameGetLines(frameRef);
-    NSMutableArray *newPaths = [NSMutableArray array];
     NSInteger lineCount = [lines count];
-    CGPoint *origins = malloc(lineCount * sizeof(CGPoint)); //给每行的起始点开辟内存
     index = [self parserIndexWithPoint:point frameRef:frameRef];
     if (index == -1) {
         return _selectPathArray;
@@ -570,32 +568,10 @@ static CGFloat getWidth(void *ref) {
         }
     }
     //    NSLog(@"selectRange - %@",NSStringFromRange((*selectRange)));
+    NSArray * newPaths = @[];
     if (lineCount) {
-        CTFrameGetLineOrigins(frameRef, CFRangeMake(0, 0), origins);
-        for (int i = 0; i<lineCount; i++){
-            CGPoint baselineOrigin = origins[i];
-            CTLineRef line = (__bridge CTLineRef)[lines objectAtIndex:i];
-            CGFloat ascent,descent,linegap; //声明字体的上行高度和下行高度和行距
-            CTLineGetTypographicBounds(line, &ascent, &descent, &linegap);
-            CFRange stringRange = CTLineGetStringRange(line);
-            CGFloat xStart;
-            CGFloat xEnd;
-            NSRange drawRange = [self selectRange:NSMakeRange((*selectRange).location, (*selectRange).length) lineRange:NSMakeRange(stringRange.location, stringRange.length)];
-            
-            if (drawRange.length) {
-                xStart = CTLineGetOffsetForStringIndex(line, drawRange.location, NULL);
-                xEnd = CTLineGetOffsetForStringIndex(line, drawRange.location+drawRange.length, NULL);
-                CGRect rect = CGRectMake(xStart, baselineOrigin.y-descent, fabs(xStart-xEnd), ascent+descent);
-                if (rect.size.width ==0 || rect.size.height == 0) {
-                    continue;
-                }
-                //每一行选中的区域
-                [newPaths addObject:NSStringFromCGRect(rect)];
-            }
-        }
+        newPaths = [self stringPathsWithRange:NSMakeRange((*selectRange).location, (*selectRange).length)];
     }
-    
-    free(origins);
     return newPaths;
 }
 //根据字符串的范围，获得字符串所在的路径
