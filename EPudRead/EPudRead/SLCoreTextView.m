@@ -38,7 +38,6 @@
 }
 @end
 
-
 @interface SLCoreTextView ()
 {
     CGRect _menuRect; //菜单选中的区域  坐标原点在左下角
@@ -46,8 +45,8 @@
     BOOL _direction; //滑动方向  (0---左侧滑动 1 ---右侧滑动)
     
     NSRange _selectRange;  //选中的内容区间
-//    NSRange _calRange;
-    NSArray *_pathArray; //选中的路径数组
+    NSArray *_selectPathArray; //选中的路径数组
+    NSArray *_notePathArray; // 下划线路径数组
     
     UIPanGestureRecognizer *_pan;
     //滑动手势有效区间
@@ -91,10 +90,10 @@
         pan;
     })];
     //点击手势
-       [self addGestureRecognizer:({
-           UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
-           tap;
-       })];
+    [self addGestureRecognizer:({
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+        tap;
+    })];
 }
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
@@ -136,7 +135,9 @@
     
     //给选中的部分添加背景色
     CGRect leftDot,rightDot = CGRectZero;
-    [self drawSelectedPath:_pathArray LeftDot:&leftDot RightDot:&rightDot];
+    [self drawBackcolorPath:_selectPathArray LeftDot:&leftDot RightDot:&rightDot];
+    // 添加下划线
+    [self drawUnderlinePath:_notePathArray];
     
     // 使用CTFrame在CGContextRef上下文上绘制
     CTFrameDraw(self.frameRef, context);
@@ -154,8 +155,8 @@
     CFRelease(framesetter);
     CFRelease(path);
 }
-// 给选中区域绘制背景色
--(void)drawSelectedPath:(NSArray *)array LeftDot:(CGRect *)leftDot RightDot:(CGRect *)rightDot{
+//绘制背景色
+-(void)drawBackcolorPath:(NSArray *)array LeftDot:(CGRect *)leftDot RightDot:(CGRect *)rightDot{
     if (!array.count) {
         _pan.enabled = NO;
         //        if ([self.delegate respondsToSelector:@selector(readViewEndEdit:)]) {
@@ -184,6 +185,24 @@
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextAddPath(ctx, _path);
     CGContextFillPath(ctx);
+    CGPathRelease(_path);
+}
+//绘制下划线
+-(void)drawUnderlinePath:(NSArray *)array{
+    if (!array.count) {
+        [self hiddenMagnifier];
+        return;
+    }
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGMutablePathRef _path = CGPathCreateMutable();
+    for (int i = 0; i < [array count]; i++) {
+        CGRect rect = CGRectFromString([array objectAtIndex:i]);
+        CGContextMoveToPoint(ctx, CGRectGetMinX(rect), CGRectGetMinY(rect) - 6);
+        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMinY(rect) - 6);
+    }
+    CGContextSetStrokeColorWithColor(ctx, [UIColor blueColor] .CGColor);
+    CGContextSetLineWidth(ctx, 2.0f);
+    CGContextStrokePath(ctx);
     CGPathRelease(_path);
 }
 //绘制选中区间的左右分割点
@@ -237,7 +256,7 @@
         [self showMagnifier];
         self.magnifierView.touchPoint = point;
         if (!CGRectEqualToRect(rect, CGRectZero)) {
-            _pathArray = @[NSStringFromCGRect(rect)];
+            _selectPathArray = @[NSStringFromCGRect(rect)];
             [self setNeedsDisplay];
         }
     }
@@ -268,7 +287,7 @@
         }
         if (_selectState) {
             NSArray *paths = [self parserRectsWithPoint:point range:&_selectRange frameRef:_frameRef direction:_direction];
-            _pathArray = paths;
+            _selectPathArray = paths;
             [self setNeedsDisplay];
         }
     }
@@ -286,6 +305,7 @@
 - (void)tapAction:(UITapGestureRecognizer *)tap {
     if (!_selectState) {
         [self resetUserInteraction];
+        [self setNeedsDisplay];
     }
     //点击的屏幕坐标
     CGPoint point = [tap locationInView:self];
@@ -296,20 +316,31 @@
             return;
         }
     }
-    
-   //点击处的文本索引
-   CFIndex index =  [self parserIndexWithPoint:point frameRef:self.frameRef];
+    //点击处的文本索引
+    CFIndex index =  [self parserIndexWithPoint:point frameRef:self.frameRef];
     NSString *tapString = index < 0 ? @"点击空白处":[self.attributedString attributedSubstringFromRange:NSMakeRange(index, 1)].string;
-   NSLog(@"点击了文字: %@",tapString);
+    NSLog(@"点击了文字: %@",tapString);
 }
+//复制
 -(void)menuCopy:(id)sender {
+    dispatch_async(dispatch_queue_create(0, 0), ^{
+        //iOS13模拟器上执行就会出现阻塞主线程的Bug，真机无此现象，故在此放到子线程来处理
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = [self.attributedString attributedSubstringFromRange:self->_selectRange].string;
+    });
     [self resetUserInteraction];
+    [self setNeedsDisplay];
 }
+//笔记
 -(void)menuNote:(id)sender {
+    _notePathArray = [self stringPathsWithRange:_selectRange];
+    [self setNeedsDisplay];
     [self resetUserInteraction];
 }
+//分享
 -(void)menuShare:(id)sender {
     [self resetUserInteraction];
+    [self setNeedsDisplay];
 }
 
 #pragma mark - Help Methods
@@ -318,11 +349,11 @@
     _menuRect = CGRectZero;
     _selectState = NO;
     _selectRange = NSMakeRange(0, 0);
-    _pathArray = nil;
+    _selectPathArray = nil;
+//    _notePathArray = nil;
     _pan.enabled = NO;
     _leftRect = CGRectZero;
     _rightRect = CGRectZero;
-    [self setNeedsDisplay];
     [self hiddenMenu];
     [self hiddenMagnifier];
 }
@@ -508,7 +539,6 @@ static CGFloat getWidth(void *ref) {
 /// @param point 触摸点
 /// @param selectRange 选中文本范围
 /// @param frameRef 帧内容
-/// @param paths 已选中的内容路径
 /// @param direction 选择的方向
 -(NSArray *)parserRectsWithPoint:(CGPoint)point range:(NSRange *)selectRange frameRef:(CTFrameRef)frameRef direction:(BOOL) direction {
     CFIndex index = -1;
@@ -518,7 +548,7 @@ static CGFloat getWidth(void *ref) {
     CGPoint *origins = malloc(lineCount * sizeof(CGPoint)); //给每行的起始点开辟内存
     index = [self parserIndexWithPoint:point frameRef:frameRef];
     if (index == -1) {
-        return _pathArray;
+        return _selectPathArray;
     }
     if (direction) //从右侧滑动
     {
@@ -562,12 +592,46 @@ static CGFloat getWidth(void *ref) {
                 //每一行选中的区域
                 [newPaths addObject:NSStringFromCGRect(rect)];
             }
-            
         }
-        
     }
+    
     free(origins);
     return newPaths;
+}
+//根据字符串的范围，获得字符串所在的路径
+- (NSArray *)stringPathsWithRange:(NSRange)stringRange {
+    //获取所有的行
+    NSArray *lines = (__bridge NSArray *)CTFrameGetLines(self.frameRef);
+    //给每行的起始点开辟内存
+    CGPoint *origins = malloc(lines.count * sizeof(CGPoint));
+    CTFrameGetLineOrigins(self.frameRef, CFRangeMake(0, 0), origins);
+    //文本路径
+    NSMutableArray *paths = [NSMutableArray array];
+    for (int i = 0; i<lines.count; i++){
+        CGPoint baselineOrigin = origins[i];
+        CTLineRef line = (__bridge CTLineRef)[lines objectAtIndex:i];
+        CGFloat ascent,descent,linegap; //声明字体的上行高度和下行高度和行距
+        CTLineGetTypographicBounds(line, &ascent, &descent, &linegap);
+        //该行文本范围
+        CFRange lineRange = CTLineGetStringRange(line);
+        CGFloat xStart;
+        CGFloat xEnd;
+        //每行选中的区域
+        NSRange drawRange = [self selectRange:stringRange lineRange:NSMakeRange(lineRange.location, lineRange.length)];
+        if (drawRange.length) {
+            xStart = CTLineGetOffsetForStringIndex(line, drawRange.location, NULL);
+            xEnd = CTLineGetOffsetForStringIndex(line, drawRange.location+drawRange.length, NULL);
+            CGRect rect = CGRectMake(xStart, baselineOrigin.y-descent, fabs(xStart-xEnd), ascent+descent);
+            if (rect.size.width ==0 || rect.size.height == 0) {
+                continue;
+            }
+            //每一行选中的区域
+            [paths addObject:NSStringFromCGRect(rect)];
+        }
+    }
+    //释放手动开辟的内存
+    free(origins);
+    return paths;
 }
 /// 返回 某坐标点文本 在总文本中的索引
 - (CFIndex)parserIndexWithPoint:(CGPoint)point frameRef:(CTFrameRef)frameRef {
