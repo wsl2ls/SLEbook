@@ -264,9 +264,8 @@ static CGFloat getWidth(void *ref) {
 }
 
 #pragma mark - UIPageViewControllerDelegate,UIPageViewControllerDataSource
-//向前翻页时执行
+//后退翻页是执行
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    NSLog(@"viewControllerBeforeViewController");
     if (self.currentPage - 1 >= 0) {
         SLReadViewController * readViewController = [self readViewControllerWithPage:self.currentPage - 1];
         return readViewController;
@@ -274,9 +273,8 @@ static CGFloat getWidth(void *ref) {
         return nil;
     }
 }
-//向后翻页时执行
+//前进翻页时执行
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    NSLog(@"viewControllerAfterViewController");
     if (self.currentPage + 1 < self.pagesArray.count) {
         SLReadViewController * readViewController = [self readViewControllerWithPage:self.currentPage + 1];
         return readViewController;
@@ -286,8 +284,10 @@ static CGFloat getWidth(void *ref) {
 }
 //在动画执行完毕后被调用，即controller切换完成后，我们可以在这个代理中进行一些后续操作
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(nonnull NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed {
-    
-    self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];
+    if (finished) {
+        
+        self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];
+    }
 }
 
 @end
