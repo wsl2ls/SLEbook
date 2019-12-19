@@ -24,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 //返回图片属性字符串
 - (NSAttributedString *)imageAttributeString:(CGSize)contenSize withAttribute:(NSDictionary *)attribute;
-
 @end
 
 NS_ASSUME_NONNULL_END

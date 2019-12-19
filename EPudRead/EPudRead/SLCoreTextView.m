@@ -154,7 +154,6 @@
     
     CFRelease(framesetter);
     CFRelease(path);
-
 }
 //绘制背景色
 -(void)drawBackcolorPath:(NSArray *)array LeftDot:(CGRect *)leftDot RightDot:(CGRect *)rightDot{

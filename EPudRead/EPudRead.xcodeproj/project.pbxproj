@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		781B516623AB1DF700243902 /* SLPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 781B516523AB1DF700243902 /* SLPageViewController.m */; };
+		781B516923AB264000243902 /* SLReadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 781B516823AB264000243902 /* SLReadViewController.m */; };
 		786E2D4423A09A6900A11F08 /* SLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 786E2D4323A09A6900A11F08 /* SLViewController.m */; };
 		786E2D4623A0CF8400A11F08 /* lufei.png in Resources */ = {isa = PBXBuildFile; fileRef = 786E2D4523A0CF8400A11F08 /* lufei.png */; };
 		787DA8EB239F47B30046A121 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA8EA239F47B30046A121 /* AppDelegate.m */; };
@@ -51,6 +53,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		781B516423AB1DF700243902 /* SLPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLPageViewController.h; sourceTree = "<group>"; };
+		781B516523AB1DF700243902 /* SLPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLPageViewController.m; sourceTree = "<group>"; };
+		781B516723AB264000243902 /* SLReadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLReadViewController.h; sourceTree = "<group>"; };
+		781B516823AB264000243902 /* SLReadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLReadViewController.m; sourceTree = "<group>"; };
 		786E2D4223A09A6900A11F08 /* SLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLViewController.h; sourceTree = "<group>"; };
 		786E2D4323A09A6900A11F08 /* SLViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLViewController.m; sourceTree = "<group>"; };
 		786E2D4523A0CF8400A11F08 /* lufei.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lufei.png; sourceTree = "<group>"; };
@@ -172,6 +178,10 @@
 				787DA8ED239F47B30046A121 /* SceneDelegate.m */,
 				787DA8EF239F47B30046A121 /* ViewController.h */,
 				787DA8F0239F47B30046A121 /* ViewController.m */,
+				781B516423AB1DF700243902 /* SLPageViewController.h */,
+				781B516523AB1DF700243902 /* SLPageViewController.m */,
+				781B516723AB264000243902 /* SLReadViewController.h */,
+				781B516823AB264000243902 /* SLReadViewController.m */,
 				786E2D4223A09A6900A11F08 /* SLViewController.h */,
 				786E2D4323A09A6900A11F08 /* SLViewController.m */,
 				78A1978823A33E2D00056A69 /* CoreTextViewController.h */,
@@ -398,12 +408,14 @@
 				787DA8EB239F47B30046A121 /* AppDelegate.m in Sources */,
 				787DA937239FBCB80046A121 /* NSString+HTML.m in Sources */,
 				786E2D4423A09A6900A11F08 /* SLViewController.m in Sources */,
+				781B516923AB264000243902 /* SLReadViewController.m in Sources */,
 				787DA923239F7C030046A121 /* GDataXMLNode.m in Sources */,
 				787DA938239FBCB80046A121 /* GTMNSString+HTML.m in Sources */,
 				787DA8FC239F47B50046A121 /* main.m in Sources */,
 				787DA928239FB1B00046A121 /* SLChapterModel.m in Sources */,
 				78A1978A23A33E2D00056A69 /* CoreTextViewController.m in Sources */,
 				787DA931239FBBED0046A121 /* LSYReadParser.m in Sources */,
+				781B516623AB1DF700243902 /* SLPageViewController.m in Sources */,
 				78A1979023A3ABEA00056A69 /* SLCoreTextView.m in Sources */,
 				787DA8EE239F47B30046A121 /* SceneDelegate.m in Sources */,
 				787DA92F239FBBED0046A121 /* LSYReadConfig.m in Sources */,

@@ -19,6 +19,11 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         readConfig = [[self alloc] init];
+        //阅读效果默认配置
+        readConfig.fontSize = 16;
+        readConfig.lineSpace = 10;
+        readConfig.fontColor = [UIColor blackColor];
+        readConfig.theme = [UIColor whiteColor];
     });
     return readConfig;
 }

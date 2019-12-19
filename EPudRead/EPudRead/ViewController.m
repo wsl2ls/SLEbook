@@ -12,6 +12,7 @@
 #import "SLChapterModel.h"
 #import "SLViewController.h"
 #import "CoreTextViewController.h"
+#import "SLPageViewController.h"
 
 #define kDocuments NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject
 
@@ -129,9 +130,11 @@
     NSFileManager *fileManager = [[NSFileManager alloc] init];
     if ([fileManager fileExistsAtPath:unzipPath]) {
         //已解压 解析
-        CoreTextViewController *coreTextView = [[ CoreTextViewController alloc] init];
-        coreTextView.chapterArray = [self parseOpf:[self pathOfOpfWithFilePath:unzipPath]];
-        [self.navigationController pushViewController:coreTextView animated:YES];
+//        CoreTextViewController *coreTextView = [[ CoreTextViewController alloc] init];
+//        coreTextView.chapterArray = [self parseOpf:[self pathOfOpfWithFilePath:unzipPath]];
+        SLPageViewController *pageVC = [[SLPageViewController alloc] init];
+        pageVC.chapterModel = [self parseOpf:[self pathOfOpfWithFilePath:unzipPath]].firstObject;
+        [self.navigationController pushViewController:pageVC animated:YES];
     }else {
         //未解压
         [SSZipArchive unzipFileAtPath:filepath toDestination:unzipPath delegate:self];
