@@ -17,7 +17,9 @@
 @property (nonatomic, assign) NSInteger currentPage; //当前页码
 @property (nonatomic, assign) NSInteger willPage; //可能要翻到的页码 默认是与当前页码相等，主要用来解决手动翻页时即将前往的页码，也可能取消翻页
 
-@property (nonatomic, strong) NSMutableArray * attributesRange; //所有的链接
+@property (nonatomic, strong) NSMutableArray * attributesRange; //自定义属性
+
+@property (nonatomic, strong) NSMutableAttributedString *textAttribute; //当前富文本
 
 @end
 
@@ -48,9 +50,10 @@
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
     
+    //富文本属性
     _attributesRange= [NSMutableArray array];
-    [_attributesRange addObject:@{[NSValue valueWithRange:NSMakeRange(50, 30)] : @{@"" : @"", @"value":@"链接值"}}];
-    
+    //    [_attributesRange addObject:@{[NSValue valueWithRange:NSMakeRange(50, 30)] : @{@"Link" : @"链接值1", @"FontColor":[UIColor blueColor], @"Underline":@"样式1"}}];
+    [_attributesRange addObject:@{[NSValue valueWithRange:NSMakeRange(100, 400)] : @{@"Link" : @"链接值2", @"FontColor":[UIColor blueColor], @"Underline":@"样式1"}}];
     
     //获取分页后的数据
     self.pagesArray = [self coreTextPaging:[self textAttributedString] textBounds:self.view.bounds];
@@ -62,7 +65,7 @@
                                       direction:UIPageViewControllerNavigationDirectionForward
                                        animated:NO
                                      completion:nil];
- 
+    
     self.currentPage = 0;
     self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];
 }
@@ -82,20 +85,52 @@
         CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPos, 0), path, NULL);
         //生成frame
         CFRange frameRange = CTFrameGetVisibleStringRange(frame);
-        NSRange ra = NSMakeRange(frameRange.location, frameRange.length);
+        NSRange pageRange = NSMakeRange(frameRange.location, frameRange.length);
         //如果图片占位大小铺满了整个视图，则获取的可见字符串长度为0，就会造成死循环
-        if(ra.length == 0) {
-            ra.length +=1;
+        if(pageRange.length == 0) {
+            pageRange.length +=1;
         }
+        //图片分页
         NSMutableArray *images = [NSMutableArray array];
         for (SLImageData *imageData in _chapterModel.imageArray) {
-            if (ra.location < imageData.position && imageData.position <= ra.location + ra.length  ) {
+            if (pageRange.location < imageData.position && imageData.position <= pageRange.location + pageRange.length  ) {
                 [images addObject:imageData];
             }
         }
-        [pagingResult addObject:@{@"Text":[attrString attributedSubstringFromRange:ra], @"images":[NSArray arrayWithArray:images]}];
+        //富文本属性分页
+        NSMutableArray *attributes = [NSMutableArray array];
+        for (NSDictionary *attributeDict in self.attributesRange) {
+            NSRange range = [attributeDict.allKeys.firstObject rangeValue];
+            //不在当前页范围
+            if(range.location > pageRange.location+pageRange.length || range.location + range.length < pageRange.location) continue;
+            NSRange newRange = NSMakeRange(0, 0);
+            if (range.location < pageRange.location) {
+                //起点在上一页
+                newRange.location = 0;
+                if (range.location+range.length <= pageRange.location + pageRange.length) {
+                    //终点在当前页
+                    newRange.length = range.location+range.length - pageRange.location;
+                }else {
+                    //终点在下一页
+                    newRange.length = pageRange.length;
+                }
+            }else {
+                //起点在当前页
+                newRange.location = range.location;
+                if (range.location+range.length <= pageRange.location + pageRange.length) {
+                    //终点在当前页
+                    newRange.length = range.length;
+                }else {
+                    //终点在下一页
+                    newRange.length = pageRange.location+pageRange.length - range.location;
+                }
+            }
+            [attributes addObject:@{[NSValue valueWithRange:newRange]:attributeDict.allValues.firstObject}];
+        }
+        
+        [pagingResult addObject:@{@"Range":[NSValue valueWithRange:pageRange], @"Images":[NSArray arrayWithArray:images], @"Attributes":[NSArray arrayWithArray:attributes]}];
         //移动当前文本位置
-        textPos += ra.length;
+        textPos += pageRange.length;
         CFRelease(frame);
     }
     CGPathRelease(path);
@@ -181,8 +216,9 @@ static CGFloat getWidth(void *ref) {
 //获取对应页码的阅读控制器
 - (SLReadViewController *)readViewControllerWithPage:(NSInteger)page {
     SLReadViewController *readViewController = [[SLReadViewController alloc] init];
-    readViewController.coreTextView.imageArray = self.pagesArray[page][@"images"];
-    readViewController.coreTextView.attributedString = self.pagesArray[page][@"Text"];
+    readViewController.coreTextView.imageArray = self.pagesArray[page][@"Images"];
+    readViewController.coreTextView.attributedString = [[NSMutableAttributedString alloc] initWithAttributedString: [_textAttribute attributedSubstringFromRange:[self.pagesArray[page][@"Range"] rangeValue]]];
+    readViewController.coreTextView.attributesRange = self.pagesArray[page][@"Attributes"];
     readViewController.coreTextView.backgroundColor = [SLReadConfig shareInstance].theme;
     return readViewController;
 }
@@ -218,7 +254,7 @@ static CGFloat getWidth(void *ref) {
         [attributeStr replaceCharactersInRange:NSMakeRange(newLocation, range.length) withAttributedString:placeHolder];
     }
     [attributeStr addAttributes:dict  range:NSMakeRange(0, attributeStr.length)];
-    
+    _textAttribute = attributeStr;
     return attributeStr;
 }
 
@@ -259,11 +295,19 @@ static CGFloat getWidth(void *ref) {
 }
 //调整文字大小 需要更新分页数据
 - (void)updateFontSize {
-    if(self.currentPage > self.pagesArray.count - 1) {
-        self.currentPage = self.pagesArray.count - 1;
-    }
+    
+    //记录当前所在页的范围，便于重新分页之后定位到对应内容页
+    NSRange currentRange = [self.pagesArray[self.currentPage][@"Range"] rangeValue];
     //更新分页后的数据
     self.pagesArray = [self coreTextPaging:[self textAttributedString] textBounds:self.view.bounds];
+    //定位到当前浏览内容所在页
+    for (int i = 0; i < self.pagesArray.count; i++) {
+        NSRange range = [self.pagesArray[i][@"Range"] rangeValue];
+        if (currentRange.location >= range.location && currentRange.location < range.location + range.length) {
+            self.currentPage = i;
+            break;
+        }
+    }
     SLReadViewController * readViewController = [self readViewControllerWithPage:self.currentPage];
     [self.pageViewController setViewControllers:@[readViewController]
                                       direction:UIPageViewControllerNavigationDirectionForward

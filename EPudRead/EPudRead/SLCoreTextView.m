@@ -42,11 +42,10 @@
 {
     CGRect _menuRect; //菜单选中的区域  坐标原点在左下角
     BOOL _selectState;  //是否是选中状态
-    BOOL _direction; //滑动方向  (0---左侧滑动 1 ---右侧滑动)
+    BOOL _direction; //滑动选择方向  (0---左侧滑动 1 ---右侧滑动)
     
     NSRange _selectRange;  //选中的内容区间
     NSArray *_selectPathArray; //选中的路径数组
-    NSArray *_notePathArray; // 下划线路径数组
     
     UIPanGestureRecognizer *_pan;
     //滑动手势有效区间
@@ -133,12 +132,6 @@
     CGContextTranslateCTM(context, 0, self.bounds.size.height);
     CGContextScaleCTM(context, 1, -1);
     
-    //给选中的部分添加背景色
-    CGRect leftDot,rightDot = CGRectZero;
-    [self drawBackcolorPath:_selectPathArray LeftDot:&leftDot RightDot:&rightDot];
-    // 添加下划线
-    [self drawUnderlinePath:_notePathArray];
-    
     // 使用CTFrame在CGContextRef上下文上绘制
     CTFrameDraw(self.frameRef, context);
     
@@ -149,8 +142,17 @@
         CGContextDrawImage(context, imageData.imageRect, [UIImage imageWithContentsOfFile:imageData.url].CGImage);
     }
     
+    //给选中的部分添加背景色
+    CGRect leftDot,rightDot = CGRectZero;
+    [self drawBackcolorPath:_selectPathArray LeftDot:&leftDot RightDot:&rightDot];
     //绘制选中左右分割图
     [self drawDotWithLeft:leftDot right:rightDot];
+    
+    //根据属性
+    for (NSDictionary *attribute in self.attributesRange) {
+        NSArray *paths = [self stringPathsWithRange:[attribute.allKeys.firstObject rangeValue]];
+        [self drawUnderlinePath:paths];
+    }
     
     CFRelease(framesetter);
     CFRelease(path);
@@ -332,7 +334,7 @@
 }
 //笔记
 -(void)menuNote:(id)sender {
-    _notePathArray = [self stringPathsWithRange:_selectRange];
+    //    _notePathArray = [self stringPathsWithRange:_selectRange];
     [self setNeedsDisplay];
     [self cancelSelected];
 }
