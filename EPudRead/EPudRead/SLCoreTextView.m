@@ -190,7 +190,6 @@
 //绘制下划线
 -(void)drawUnderlinePath:(NSArray *)array{
     if (!array.count) {
-        [self hiddenMagnifier];
         return;
     }
     CGContextRef ctx = UIGraphicsGetCurrentContext();

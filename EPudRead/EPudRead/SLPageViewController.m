@@ -12,10 +12,10 @@
 @interface SLPageViewController ()<UIPageViewControllerDelegate, UIPageViewControllerDataSource>
 
 @property (nonatomic, strong) UIPageViewController * pageViewController; //分页控制器
-@property (nonatomic, strong) SLReadViewController *currentReadVC; //当前页的阅读控制器
 
 @property (nonatomic, strong) NSArray *pagesArray; //当前章节分页后的数据
 @property (nonatomic, assign) NSInteger currentPage; //当前页码
+@property (nonatomic, assign) NSInteger willPage; //可能要翻到的页码 默认是与当前页码相等，主要用来解决手动翻页时即将前往的页码，也可能取消翻页
 
 @end
 
@@ -56,16 +56,14 @@
                                       direction:UIPageViewControllerNavigationDirectionForward
                                        animated:NO
                                      completion:nil];
-    _currentReadVC = readerController;
+ 
+    self.currentPage = 0;
+    self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];
 }
 
 #pragma mark - Help methods
 //分页计算 存储每一页的文本和图片
 - (NSArray *)coreTextPaging:(NSAttributedString *)attrString textBounds:(CGRect)textBounds{
-    
-    
-    
-    
     NSMutableArray *pagingResult = [NSMutableArray array];
     CFAttributedStringRef cfAttStr = (__bridge CFAttributedStringRef)attrString;
     //直接桥接，引用计数不变
@@ -153,6 +151,11 @@ static CGFloat getWidth(void *ref) {
     return ranges;
 }
 
+#pragma mark - setter
+- (void)setCurrentPage:(NSInteger)currentPage {
+    _currentPage = currentPage;
+    _willPage = currentPage;
+}
 #pragma mark - Getter
 - (UIPageViewController *)pageViewController {
     if(!_pageViewController) {
@@ -268,6 +271,7 @@ static CGFloat getWidth(void *ref) {
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
     if (self.currentPage - 1 >= 0) {
         SLReadViewController * readViewController = [self readViewControllerWithPage:self.currentPage - 1];
+        self.willPage = self.currentPage - 1;
         return readViewController;
     } else {
         return nil;
@@ -277,6 +281,7 @@ static CGFloat getWidth(void *ref) {
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     if (self.currentPage + 1 < self.pagesArray.count) {
         SLReadViewController * readViewController = [self readViewControllerWithPage:self.currentPage + 1];
+        self.willPage = self.currentPage + 1;
         return readViewController;
     } else {
         return nil;
@@ -284,8 +289,13 @@ static CGFloat getWidth(void *ref) {
 }
 //在动画执行完毕后被调用，即controller切换完成后，我们可以在这个代理中进行一些后续操作
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(nonnull NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed {
-    if (finished) {
-        
+    //动画完成 取消翻页
+    if (finished && !completed) {
+        self.willPage = self.currentPage;
+    }
+    // 翻页完成
+    if (completed) {
+        self.currentPage = self.willPage;
         self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];
     }
 }
