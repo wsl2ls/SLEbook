@@ -17,6 +17,8 @@
 @property (nonatomic, assign) NSInteger currentPage; //当前页码
 @property (nonatomic, assign) NSInteger willPage; //可能要翻到的页码 默认是与当前页码相等，主要用来解决手动翻页时即将前往的页码，也可能取消翻页
 
+@property (nonatomic, strong) NSMutableArray * attributesRange; //所有的链接
+
 @end
 
 @implementation SLPageViewController
@@ -45,6 +47,10 @@
     
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
+    
+    _attributesRange= [NSMutableArray array];
+    [_attributesRange addObject:@{[NSValue valueWithRange:NSMakeRange(50, 30)] : @{@"" : @"", @"value":@"链接值"}}];
+    
     
     //获取分页后的数据
     self.pagesArray = [self coreTextPaging:[self textAttributedString] textBounds:self.view.bounds];
@@ -109,7 +115,7 @@ static CGFloat getWidth(void *ref) {
     float width = [(NSNumber *)[(__bridge NSDictionary *)ref objectForKey:@"width"] floatValue];
     return width;
 }
-//返回图片占位属性字符串
+//返回图片占位属性字符串.string是nil
 - (NSAttributedString *)imageAttributeString:(CGSize)contenSize withAttribute:(NSDictionary *)attribute {
     // 1 创建CTRunDelegateCallbacks
     CTRunDelegateCallbacks callback;

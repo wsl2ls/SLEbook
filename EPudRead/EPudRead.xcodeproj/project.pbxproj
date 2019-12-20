@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		781B516623AB1DF700243902 /* SLPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 781B516523AB1DF700243902 /* SLPageViewController.m */; };
 		781B516923AB264000243902 /* SLReadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 781B516823AB264000243902 /* SLReadViewController.m */; };
-		786E2D4423A09A6900A11F08 /* SLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 786E2D4323A09A6900A11F08 /* SLViewController.m */; };
 		786E2D4623A0CF8400A11F08 /* lufei.png in Resources */ = {isa = PBXBuildFile; fileRef = 786E2D4523A0CF8400A11F08 /* lufei.png */; };
 		787DA8EB239F47B30046A121 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA8EA239F47B30046A121 /* AppDelegate.m */; };
 		787DA8EE239F47B30046A121 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA8ED239F47B30046A121 /* SceneDelegate.m */; };
@@ -29,7 +28,6 @@
 		787DA937239FBCB80046A121 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA934239FBCB70046A121 /* NSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		787DA938239FBCB80046A121 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 787DA936239FBCB80046A121 /* GTMNSString+HTML.m */; };
 		787DA93B239FCF030046A121 /* 中公开学APP.epub in Resources */ = {isa = PBXBuildFile; fileRef = 787DA93A239FCEEE0046A121 /* 中公开学APP.epub */; };
-		78A1978A23A33E2D00056A69 /* CoreTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A1978923A33E2D00056A69 /* CoreTextViewController.m */; };
 		78A1979023A3ABEA00056A69 /* SLCoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */; };
 		78E923C023A76482002BF5DF /* r_drag-dot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 78E923BF23A76481002BF5DF /* r_drag-dot@2x.png */; };
 		F4E5AAD03A991C2A76F85515 /* libPods-EPudRead.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7AC86ECE743D8A2DF0BD1D0 /* libPods-EPudRead.a */; };
@@ -57,8 +55,6 @@
 		781B516523AB1DF700243902 /* SLPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLPageViewController.m; sourceTree = "<group>"; };
 		781B516723AB264000243902 /* SLReadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLReadViewController.h; sourceTree = "<group>"; };
 		781B516823AB264000243902 /* SLReadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLReadViewController.m; sourceTree = "<group>"; };
-		786E2D4223A09A6900A11F08 /* SLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLViewController.h; sourceTree = "<group>"; };
-		786E2D4323A09A6900A11F08 /* SLViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLViewController.m; sourceTree = "<group>"; };
 		786E2D4523A0CF8400A11F08 /* lufei.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lufei.png; sourceTree = "<group>"; };
 		787DA8E6239F47B30046A121 /* EPudRead.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EPudRead.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		787DA8E9239F47B30046A121 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -95,8 +91,6 @@
 		787DA936239FBCB80046A121 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
 		787DA939239FBF480046A121 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		787DA93A239FCEEE0046A121 /* 中公开学APP.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "中公开学APP.epub"; sourceTree = "<group>"; };
-		78A1978823A33E2D00056A69 /* CoreTextViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreTextViewController.h; sourceTree = "<group>"; };
-		78A1978923A33E2D00056A69 /* CoreTextViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreTextViewController.m; sourceTree = "<group>"; };
 		78A1978E23A3ABEA00056A69 /* SLCoreTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLCoreTextView.h; sourceTree = "<group>"; };
 		78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLCoreTextView.m; sourceTree = "<group>"; };
 		78E923BF23A76481002BF5DF /* r_drag-dot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "r_drag-dot@2x.png"; sourceTree = "<group>"; };
@@ -182,10 +176,6 @@
 				781B516523AB1DF700243902 /* SLPageViewController.m */,
 				781B516723AB264000243902 /* SLReadViewController.h */,
 				781B516823AB264000243902 /* SLReadViewController.m */,
-				786E2D4223A09A6900A11F08 /* SLViewController.h */,
-				786E2D4323A09A6900A11F08 /* SLViewController.m */,
-				78A1978823A33E2D00056A69 /* CoreTextViewController.h */,
-				78A1978923A33E2D00056A69 /* CoreTextViewController.m */,
 				78A1978E23A3ABEA00056A69 /* SLCoreTextView.h */,
 				78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */,
 				787DA926239FB1B00046A121 /* SLChapterModel.h */,
@@ -407,13 +397,11 @@
 				787DA8F1239F47B30046A121 /* ViewController.m in Sources */,
 				787DA8EB239F47B30046A121 /* AppDelegate.m in Sources */,
 				787DA937239FBCB80046A121 /* NSString+HTML.m in Sources */,
-				786E2D4423A09A6900A11F08 /* SLViewController.m in Sources */,
 				781B516923AB264000243902 /* SLReadViewController.m in Sources */,
 				787DA923239F7C030046A121 /* GDataXMLNode.m in Sources */,
 				787DA938239FBCB80046A121 /* GTMNSString+HTML.m in Sources */,
 				787DA8FC239F47B50046A121 /* main.m in Sources */,
 				787DA928239FB1B00046A121 /* SLChapterModel.m in Sources */,
-				78A1978A23A33E2D00056A69 /* CoreTextViewController.m in Sources */,
 				787DA931239FBBED0046A121 /* LSYReadParser.m in Sources */,
 				781B516623AB1DF700243902 /* SLPageViewController.m in Sources */,
 				78A1979023A3ABEA00056A69 /* SLCoreTextView.m in Sources */,

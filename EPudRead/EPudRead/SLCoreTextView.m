@@ -391,41 +391,6 @@
 }
 
 #pragma mark - CoreText计算
-// CTRunDelegateCallbacks 回调方法
-static CGFloat getAscent(void *ref) {
-    float height = [(NSNumber *)[(__bridge NSDictionary *)ref objectForKey:@"height"] floatValue];
-    return height;
-}
-static CGFloat getDescent(void *ref) {
-    return 0;
-}
-static CGFloat getWidth(void *ref) {
-    float width = [(NSNumber *)[(__bridge NSDictionary *)ref objectForKey:@"width"] floatValue];
-    return width;
-}
-//返回图片占位属性字符串
-- (NSAttributedString *)imageAttributeString:(CGSize)contenSize withAttribute:(NSDictionary *)attribute {
-    // 1 创建CTRunDelegateCallbacks
-    CTRunDelegateCallbacks callback;
-    memset(&callback, 0, sizeof(CTRunDelegateCallbacks));
-    callback.getAscent = getAscent;
-    callback.getDescent = getDescent;
-    callback.getWidth = getWidth;
-    
-    // 2 创建CTRunDelegateRef
-    NSDictionary *metaData = @{@"width": @(contenSize.width), @"height": @(contenSize.height)};
-    CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callback, (__bridge_retained void *)(metaData));
-    
-    // 3 设置占位使用的图片属性字符串
-    // 参考：https://en.wikipedia.org/wiki/Specials_(Unicode_block)  U+FFFC  OBJECT REPLACEMENT CHARACTER, placeholder in the text for another unspecified object, for example in a compound document.
-    unichar objectReplacementChar = 0xFFFC;
-    NSMutableAttributedString *imagePlaceHolderAttributeString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithCharacters:&objectReplacementChar length:1] attributes:attribute];
-    
-    // 4 设置RunDelegate代理
-    CFAttributedStringSetAttribute((CFMutableAttributedStringRef)imagePlaceHolderAttributeString, CFRangeMake(0, 1), kCTRunDelegateAttributeName, runDelegate);
-    CFRelease(runDelegate);
-    return imagePlaceHolderAttributeString;
-}
 
 //计算图片所在的位置 注意:获得的图片位置坐标系是左下角
 - (void)calculateImageRect {

@@ -22,8 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign, readonly) CGFloat textHeight; //富文本的高度
 
-//返回图片属性字符串
-- (NSAttributedString *)imageAttributeString:(CGSize)contenSize withAttribute:(NSDictionary *)attribute;
 @end
 
 NS_ASSUME_NONNULL_END

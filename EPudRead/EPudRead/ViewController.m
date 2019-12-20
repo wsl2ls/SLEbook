@@ -10,8 +10,6 @@
 #import "ZipArchive.h"
 #import "GDataXMLNode.h"
 #import "SLChapterModel.h"
-#import "SLViewController.h"
-#import "CoreTextViewController.h"
 #import "SLPageViewController.h"
 
 #define kDocuments NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject
