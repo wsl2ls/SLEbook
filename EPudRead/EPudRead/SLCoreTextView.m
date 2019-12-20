@@ -132,9 +132,6 @@
     CGContextTranslateCTM(context, 0, self.bounds.size.height);
     CGContextScaleCTM(context, 1, -1);
     
-    // 使用CTFrame在CGContextRef上下文上绘制
-    CTFrameDraw(self.frameRef, context);
-    
     //计算图片位置
     [self calculateImageRect];
     for (SLImageData *imageData in self.imageArray) {
@@ -153,6 +150,9 @@
         NSArray *paths = [self stringPathsWithRange:[attribute.allKeys.firstObject rangeValue]];
         [self drawUnderlinePath:paths];
     }
+    
+    // 使用CTFrame在CGContextRef上下文上绘制
+    CTFrameDraw(self.frameRef, context);
     
     CFRelease(framesetter);
     CFRelease(path);
