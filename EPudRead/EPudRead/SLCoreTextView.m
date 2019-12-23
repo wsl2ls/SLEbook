@@ -335,6 +335,7 @@
 //笔记
 -(void)menuNote:(id)sender {
     //    _notePathArray = [self stringPathsWithRange:_selectRange];
+    
     [self setNeedsDisplay];
     [self cancelSelected];
 }

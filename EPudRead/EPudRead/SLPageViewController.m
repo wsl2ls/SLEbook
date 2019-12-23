@@ -58,6 +58,7 @@
     //获取分页后的数据
     self.pagesArray = [self coreTextPaging:[self textAttributedString] textBounds:self.view.bounds];
     
+    self.currentPage = 0;
     //UIPageViewControllerNavigationDirectionForward,//前进
     //UIPageViewControllerNavigationDirectionReverse// 后退
     SLReadViewController *readerController = [self readViewControllerWithPage:self.currentPage];
@@ -66,7 +67,6 @@
                                        animated:NO
                                      completion:nil];
     
-    self.currentPage = 0;
     self.navigationItem.title = [NSString stringWithFormat:@"第 %ld 页",self.currentPage];
 }
 

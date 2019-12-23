@@ -11,6 +11,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class SLCoreTextView;
+@protocol SLCoreTextViewDelegate <NSObject>
+///点击图片
+- (void)coreTextView:(SLCoreTextView *)textView didClickImage:(NSString *)url;
+///点击链接
+- (void)coreTextView:(SLCoreTextView *)textView didClickLink:(NSString *)url textRange:(NSRange)range;
+@end
+
 @interface SLCoreTextView : UIView
 
 @property (nonatomic, strong) NSMutableAttributedString *attributedString; //富文本
@@ -20,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *attributesRange; //自定义属性
 
 @property (nonatomic, assign, readonly) CGFloat textHeight; //富文本的高度
+
+@property (nonatomic, weak) id <SLCoreTextViewDelegate> delegate; //代理
 
 @end
 
