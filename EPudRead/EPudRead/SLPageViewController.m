@@ -174,11 +174,11 @@ static CGFloat getWidth(void *ref) {
     CFRelease(runDelegate);
     return imagePlaceHolderAttributeString;
 }
-/// 匹配图片标签<img></img> 获取所有
+/// 匹配图片标签(SLImg=*) 获取所有
 - (NSMutableArray *)getImagesRangesFromResult:(NSString *)string {
     NSMutableArray *ranges = [[NSMutableArray alloc] init];
     NSError *error;
-    NSString *rangeRegex = @"<img>.*?</img>";
+    NSString *rangeRegex = @"(SLImg=.*?<)";
     NSRegularExpression *regular = [NSRegularExpression regularExpressionWithPattern:rangeRegex options:0 error:&error];
     if (!error) {
         NSArray * results = [regular matchesInString:string options:0 range:NSMakeRange(0, [string length])];
