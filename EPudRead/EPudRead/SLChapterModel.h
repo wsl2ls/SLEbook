@@ -14,10 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 富文本配置
 @interface SLReadConfig : NSObject
 +(instancetype)shareInstance;
-@property (nonatomic) CGFloat lineSpace; //行间距
-@property (nonatomic) CGFloat fontSize;  //字体大小
-@property (nonatomic,strong) UIColor *fontColor; //字体颜色
-@property (nonatomic,strong) UIColor *theme;  //主题 背景色
+@property (nonatomic) CGFloat lineSpace; //行间距 默认10
+@property (nonatomic) CGFloat fontSize;  //字体大小 默认16
+@property (nonatomic,strong) UIColor *fontColor; //字体颜色 默认 黑 
+@property (nonatomic,strong) UIColor *theme;  //主题 背景色  默认 白
 @end
 
 

@@ -40,15 +40,17 @@
 
 #pragma mark - UI
 - (void)setupUI {
-    self.navigationController.navigationBar.hidden = YES;
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor grayColor];
     UIBarButtonItem *previousItem = [[UIBarButtonItem alloc] initWithTitle:@"上一页" style:UIBarButtonItemStyleDone target:self action:@selector(previousPage)];
     UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:@"下一页" style:UIBarButtonItemStyleDone target:self action:@selector(nextPage)];
     UIBarButtonItem *bigFontItem = [[UIBarButtonItem alloc] initWithTitle:@"大" style:UIBarButtonItemStyleDone target:self action:@selector(bigFont)];
     UIBarButtonItem *littleFontItem = [[UIBarButtonItem alloc] initWithTitle:@"小" style:UIBarButtonItemStyleDone target:self action:@selector(littleFont)];
     self.navigationItem.rightBarButtonItems = @[littleFontItem , bigFontItem ,nextItem, previousItem];
+     
+    [SLReadConfig shareInstance].theme = [UIColor orangeColor];
     
     [self addChildViewController:self.pageViewController];
+    self.pageViewController.view.frame = CGRectMake(0, 64, SL_kScreenWidth, SL_kScreenHeight - 64);
     [self.view addSubview:self.pageViewController.view];
     
     //富文本属性
@@ -57,13 +59,13 @@
     [_attributesRange addObject:@{[NSValue valueWithRange:NSMakeRange(100, 400)] : @{@"Link" : @"链接值2", @"FontColor":[UIColor blueColor], @"Underline":@"样式1"}}];
     
     //获取分页后的数据
-    self.pagesArray = [self coreTextPaging:[self textAttributedString] textBounds:self.view.bounds];
+    self.pagesArray = [self coreTextPaging:[self textAttributedString] textBounds:self.pageViewController.view.bounds];
     
     self.currentPage = 0;
     //UIPageViewControllerNavigationDirectionForward,//前进
     //UIPageViewControllerNavigationDirectionReverse// 后退
-    SLReadViewController *readerController = [self readViewControllerWithPage:self.currentPage];
-    [self.pageViewController setViewControllers:@[readerController]
+    SLReadViewController *readViewController = [self readViewControllerWithPage:self.currentPage];
+    [self.pageViewController setViewControllers:@[readViewController]
                                       direction:UIPageViewControllerNavigationDirectionForward
                                        animated:NO
                                      completion:nil];
@@ -217,6 +219,8 @@ static CGFloat getWidth(void *ref) {
 //获取对应页码的阅读控制器
 - (SLReadViewController *)readViewControllerWithPage:(NSInteger)page {
     SLReadViewController *readViewController = [[SLReadViewController alloc] init];
+    readViewController.view.frame = self.pageViewController.view.bounds;
+    readViewController.coreTextView.frame = self.pageViewController.view.bounds;
     readViewController.coreTextView.imageArray = self.pagesArray[page][@"Images"];
     readViewController.coreTextView.attributedString = [[NSMutableAttributedString alloc] initWithAttributedString: [_textAttribute attributedSubstringFromRange:[self.pagesArray[page][@"Range"] rangeValue]]];
     readViewController.coreTextView.attributesRange = self.pagesArray[page][@"Attributes"];
