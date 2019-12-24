@@ -91,7 +91,7 @@
             NSString *imgString;
             if ([imgSrcScanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\"\'"] intoString:&imgString]) {
                 //替换字符
-                htmlString  =  [htmlString  stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@/>",imgTagStr] withString:[NSString stringWithFormat:@"(SLImg=%@)",imgString]];
+                htmlString  =  [htmlString  stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@/>",imgTagStr] withString:[NSString stringWithFormat:@"SLImg=%@=SLImg",imgString]];
                 SLImageData *imageData = [[SLImageData alloc] init];
                 imageData.url = [self.epubImagePath stringByAppendingPathComponent:imgString];
                 [imagesArray addObject:imageData];

@@ -178,7 +178,7 @@ static CGFloat getWidth(void *ref) {
 - (NSMutableArray *)getImagesRangesFromResult:(NSString *)string {
     NSMutableArray *ranges = [[NSMutableArray alloc] init];
     NSError *error;
-    NSString *rangeRegex = @"(SLImg=.*?<)";
+    NSString *rangeRegex = @"SLImg=.*?=SLImg";
     NSRegularExpression *regular = [NSRegularExpression regularExpressionWithPattern:rangeRegex options:0 error:&error];
     if (!error) {
         NSArray * results = [regular matchesInString:string options:0 range:NSMakeRange(0, [string length])];
@@ -237,15 +237,16 @@ static CGFloat getWidth(void *ref) {
 //    paragraphStyle.firstLineHeadIndent = 20;
     NSDictionary *dict = @{NSParagraphStyleAttributeName:paragraphStyle, NSFontAttributeName:[UIFont systemFontOfSize:[SLReadConfig shareInstance].fontSize], NSForegroundColorAttributeName:[SLReadConfig shareInstance].fontColor};
     
-    //图片标签替换为图片占位符
+   //图片标签替换为图片占位符
     NSArray *imagesRangs = [self getImagesRangesFromResult:attributeStr.string];
     NSRange currentTitleRange = NSMakeRange(0, attributeStr.length);
-    for (int i = 0; i < _chapterModel.imageArray.count; i++) {
-        SLImageData * imageData = _chapterModel.imageArray[i];
-        imageData.position =  imageData.position - 1;
-        NSRange range = NSMakeRange(imageData.position, 1);
+    for (int i = 0; i < imagesRangs.count; i++) {
+        NSRange range = [imagesRangs[i] rangeValue];
         //注意：每替换一次，原有的位置发生改变，下一轮替换的起点需要重新计算！
         CGFloat newLocation = range.location - (currentTitleRange.length - attributeStr.length);
+        SLImageData * imageData = _chapterModel.imageArray[i];
+        //该图片占位符的索引
+        imageData.position = newLocation+1;
         // 文字中加入图片占位符
         UIImage *img = [UIImage imageWithContentsOfFile:imageData.url];
         CGSize imageSize = CGSizeMake(SL_kScreenWidth, SL_kScreenWidth*img.size.height/img.size.width);
