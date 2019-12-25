@@ -132,6 +132,18 @@
     CGContextTranslateCTM(context, 0, self.bounds.size.height);
     CGContextScaleCTM(context, 1, -1);
     
+    //给选中的部分添加背景色
+    CGRect leftDot,rightDot = CGRectZero;
+    [self drawBackcolorPath:_selectPathArray LeftDot:&leftDot RightDot:&rightDot];
+    //绘制选中左右分割图
+    [self drawDotWithLeft:leftDot right:rightDot];
+    
+    //根据属性绘制
+    for (NSDictionary *attribute in self.attributesRange) {
+        NSArray *paths = [self stringPathsWithRange:[attribute.allKeys.firstObject rangeValue]];
+        [self drawUnderlinePath:paths];
+    }
+    
     //计算图片位置
     [self calculateImageRect];
     for (SLImageData *imageData in self.imageArray) {
@@ -139,19 +151,7 @@
         CGContextDrawImage(context, imageData.imageRect, [UIImage imageWithContentsOfFile:imageData.url].CGImage);
     }
     
-    //给选中的部分添加背景色
-    CGRect leftDot,rightDot = CGRectZero;
-    [self drawBackcolorPath:_selectPathArray LeftDot:&leftDot RightDot:&rightDot];
-    //绘制选中左右分割图
-    [self drawDotWithLeft:leftDot right:rightDot];
-    
-    //根据属性
-    for (NSDictionary *attribute in self.attributesRange) {
-        NSArray *paths = [self stringPathsWithRange:[attribute.allKeys.firstObject rangeValue]];
-        [self drawUnderlinePath:paths];
-    }
-    
-    // 使用CTFrame在CGContextRef上下文上绘制
+    // 使用CTFrame在CGContextRef上下文上绘制文本
     CTFrameDraw(self.frameRef, context);
     
     CFRelease(framesetter);
