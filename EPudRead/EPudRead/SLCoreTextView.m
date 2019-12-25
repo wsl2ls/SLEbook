@@ -190,21 +190,32 @@
     CGPathRelease(_path);
 }
 //绘制下划线
--(void)drawUnderlinePath:(NSArray *)array{
-    if (!array.count) {
+-(void)drawUnderlinePath:(NSArray *)paths{
+    if (!paths.count) {
         return;
     }
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGMutablePathRef _path = CGPathCreateMutable();
-    for (int i = 0; i < [array count]; i++) {
-        CGRect rect = CGRectFromString([array objectAtIndex:i]);
-        CGContextMoveToPoint(ctx, CGRectGetMinX(rect), CGRectGetMinY(rect) - 6);
+    for (int i = 0; i < [paths count]; i++) {
+        CGRect rect = CGRectFromString([paths objectAtIndex:i]);
+        
+        //实线
+//        CGContextMoveToPoint(ctx, CGRectGetMinX(rect), CGRectGetMinY(rect) - 6);
+//        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMinY(rect) - 6);
+        
+        //虚线
+       // lengths: 指明虚线是如何交替绘制 count：lengths数组的长度
+        CGFloat lengths[] = {10,5};
+        CGContextSetLineDash(ctx,0,lengths,2);
+        CGContextMoveToPoint(ctx,CGRectGetMinX(rect), CGRectGetMinY(rect) - 6);
         CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMinY(rect) - 6);
+        
     }
     CGContextSetStrokeColorWithColor(ctx, [UIColor blueColor] .CGColor);
     CGContextSetLineWidth(ctx, 2.0f);
     CGContextStrokePath(ctx);
     CGPathRelease(_path);
+    
 }
 //绘制选中区间的左右分割点
 -(void)drawDotWithLeft:(CGRect)Left right:(CGRect)right {
