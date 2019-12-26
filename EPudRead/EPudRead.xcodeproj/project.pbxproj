@@ -30,6 +30,7 @@
 		787DA93B239FCF030046A121 /* 中公开学APP.epub in Resources */ = {isa = PBXBuildFile; fileRef = 787DA93A239FCEEE0046A121 /* 中公开学APP.epub */; };
 		78A1979023A3ABEA00056A69 /* SLCoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */; };
 		78E923C023A76482002BF5DF /* r_drag-dot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 78E923BF23A76481002BF5DF /* r_drag-dot@2x.png */; };
+		78F8DB6B23B44CA100D7E4D7 /* SLTextRunDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 78F8DB6A23B44CA100D7E4D7 /* SLTextRunDelegate.m */; };
 		F4E5AAD03A991C2A76F85515 /* libPods-EPudRead.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7AC86ECE743D8A2DF0BD1D0 /* libPods-EPudRead.a */; };
 /* End PBXBuildFile section */
 
@@ -94,6 +95,8 @@
 		78A1978E23A3ABEA00056A69 /* SLCoreTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLCoreTextView.h; sourceTree = "<group>"; };
 		78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLCoreTextView.m; sourceTree = "<group>"; };
 		78E923BF23A76481002BF5DF /* r_drag-dot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "r_drag-dot@2x.png"; sourceTree = "<group>"; };
+		78F8DB6923B44CA100D7E4D7 /* SLTextRunDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLTextRunDelegate.h; sourceTree = "<group>"; };
+		78F8DB6A23B44CA100D7E4D7 /* SLTextRunDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLTextRunDelegate.m; sourceTree = "<group>"; };
 		8AFDB471C21B16D225BB7D63 /* Pods-EPudRead.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EPudRead.release.xcconfig"; path = "Target Support Files/Pods-EPudRead/Pods-EPudRead.release.xcconfig"; sourceTree = "<group>"; };
 		F33E1E711C3CEAA194A1D6B1 /* Pods-EPudRead.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EPudRead.debug.xcconfig"; path = "Target Support Files/Pods-EPudRead/Pods-EPudRead.debug.xcconfig"; sourceTree = "<group>"; };
 		F7AC86ECE743D8A2DF0BD1D0 /* libPods-EPudRead.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EPudRead.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,6 +179,8 @@
 				781B516523AB1DF700243902 /* SLPageViewController.m */,
 				781B516723AB264000243902 /* SLReadViewController.h */,
 				781B516823AB264000243902 /* SLReadViewController.m */,
+				78F8DB6923B44CA100D7E4D7 /* SLTextRunDelegate.h */,
+				78F8DB6A23B44CA100D7E4D7 /* SLTextRunDelegate.m */,
 				78A1978E23A3ABEA00056A69 /* SLCoreTextView.h */,
 				78A1978F23A3ABEA00056A69 /* SLCoreTextView.m */,
 				787DA926239FB1B00046A121 /* SLChapterModel.h */,
@@ -402,6 +407,7 @@
 				787DA938239FBCB80046A121 /* GTMNSString+HTML.m in Sources */,
 				787DA8FC239F47B50046A121 /* main.m in Sources */,
 				787DA928239FB1B00046A121 /* SLChapterModel.m in Sources */,
+				78F8DB6B23B44CA100D7E4D7 /* SLTextRunDelegate.m in Sources */,
 				787DA931239FBBED0046A121 /* LSYReadParser.m in Sources */,
 				781B516623AB1DF700243902 /* SLPageViewController.m in Sources */,
 				78A1979023A3ABEA00056A69 /* SLCoreTextView.m in Sources */,

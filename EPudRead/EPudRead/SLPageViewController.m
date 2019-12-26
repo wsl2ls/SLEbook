@@ -8,6 +8,7 @@
 
 #import "SLPageViewController.h"
 #import "SLReadViewController.h"
+#import "SLTextRunDelegate.h"
 
 @interface SLPageViewController ()<UIPageViewControllerDelegate, UIPageViewControllerDataSource>
 
@@ -46,7 +47,7 @@
     UIBarButtonItem *bigFontItem = [[UIBarButtonItem alloc] initWithTitle:@"大" style:UIBarButtonItemStyleDone target:self action:@selector(bigFont)];
     UIBarButtonItem *littleFontItem = [[UIBarButtonItem alloc] initWithTitle:@"小" style:UIBarButtonItemStyleDone target:self action:@selector(littleFont)];
     self.navigationItem.rightBarButtonItems = @[littleFontItem , bigFontItem ,nextItem, previousItem];
-     
+    
     [SLReadConfig shareInstance].theme = [UIColor orangeColor];
     
     [self addChildViewController:self.pageViewController];
@@ -76,6 +77,9 @@
 #pragma mark - Help methods
 //分页计算 存储每一页的文本和图片
 - (NSArray *)coreTextPaging:(NSAttributedString *)attrString textBounds:(CGRect)textBounds{
+    if (attrString == nil) {
+        return nil;
+    }
     NSMutableArray *pagingResult = [NSMutableArray array];
     CFAttributedStringRef cfAttStr = (__bridge CFAttributedStringRef)attrString;
     //直接桥接，引用计数不变
@@ -141,39 +145,28 @@
     //释放frameSetter
     return pagingResult;
 }
-// CTRunDelegateCallbacks 回调方法
-static CGFloat getAscent(void *ref) {
-    float height = [(NSNumber *)[(__bridge NSDictionary *)ref objectForKey:@"height"] floatValue];
-    return height;
-}
-static CGFloat getDescent(void *ref) {
-    return 0;
-}
-static CGFloat getWidth(void *ref) {
-    float width = [(NSNumber *)[(__bridge NSDictionary *)ref objectForKey:@"width"] floatValue];
-    return width;
-}
+
 //返回图片占位属性字符串.string是nil
 - (NSAttributedString *)imageAttributeString:(CGSize)contenSize withAttribute:(NSDictionary *)attribute {
-    // 1 创建CTRunDelegateCallbacks
-    CTRunDelegateCallbacks callback;
-    memset(&callback, 0, sizeof(CTRunDelegateCallbacks));
-    callback.getAscent = getAscent;
-    callback.getDescent = getDescent;
-    callback.getWidth = getWidth;
     
-    // 2 创建CTRunDelegateRef
-    NSDictionary *metaData = @{@"width": @(contenSize.width), @"height": @(contenSize.height)};
-    CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callback, (__bridge_retained void *)(metaData));
+    //CTRunDelegateRef的包装 占位空间信息
+    SLTextRunDelegate *delegate = [SLTextRunDelegate new];
+    delegate.ascent = contenSize.height;
+    delegate.descent = 0;
+    delegate.width = contenSize.width;
+    CTRunDelegateRef ctRunDelegate = delegate.CTRunDelegate;
     
-    // 3 设置占位使用的图片属性字符串
+    // 设置占位使用的图片属性字符串
     // 参考：https://en.wikipedia.org/wiki/Specials_(Unicode_block)  U+FFFC  OBJECT REPLACEMENT CHARACTER, placeholder in the text for another unspecified object, for example in a compound document.
     unichar objectReplacementChar = 0xFFFC;
     NSMutableAttributedString *imagePlaceHolderAttributeString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithCharacters:&objectReplacementChar length:1] attributes:attribute];
     
-    // 4 设置RunDelegate代理
-    CFAttributedStringSetAttribute((CFMutableAttributedStringRef)imagePlaceHolderAttributeString, CFRangeMake(0, 1), kCTRunDelegateAttributeName, runDelegate);
-    CFRelease(runDelegate);
+    // 设置RunDelegate代理
+    CFAttributedStringSetAttribute((CFMutableAttributedStringRef)imagePlaceHolderAttributeString, CFRangeMake(0, 1), kCTRunDelegateAttributeName, ctRunDelegate);
+    if (ctRunDelegate) {
+        /// add to attributed string
+        CFRelease(ctRunDelegate);
+    }
     return imagePlaceHolderAttributeString;
 }
 /// 匹配图片标签(SLImg=*) 获取所有
@@ -185,8 +178,8 @@ static CGFloat getWidth(void *ref) {
     if (!error) {
         NSArray * results = [regular matchesInString:string options:0 range:NSMakeRange(0, [string length])];
         for (NSTextCheckingResult *match in results) {
-            NSString *result = [string substringWithRange:match.range];
-            NSLog(@"%@",result);
+            //            NSString *result = [string substringWithRange:match.range];
+            //            NSLog(@"%@",result);
             [ranges addObject: [NSValue valueWithRange:match.range]];
         }
     }else{
@@ -231,6 +224,9 @@ static CGFloat getWidth(void *ref) {
 - (NSMutableAttributedString *)textAttributedString {
     //章节内容
     NSString *text = _chapterModel.content;
+    if(text == nil) {
+        return nil;
+    }
     //富文本
     NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:text];
     
@@ -238,10 +234,10 @@ static CGFloat getWidth(void *ref) {
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = [SLReadConfig shareInstance].lineSpace;       //行间距
     //    paragraphStyle.paragraphSpacing = 10;  //段落间距
-//    paragraphStyle.firstLineHeadIndent = 20;
+    //    paragraphStyle.firstLineHeadIndent = 20;
     NSDictionary *dict = @{NSParagraphStyleAttributeName:paragraphStyle, NSFontAttributeName:[UIFont systemFontOfSize:[SLReadConfig shareInstance].fontSize], NSForegroundColorAttributeName:[SLReadConfig shareInstance].fontColor};
     
-   //图片标签替换为图片占位符
+    //图片标签替换为图片占位符
     NSArray *imagesRangs = [self getImagesRangesFromResult:attributeStr.string];
     NSRange currentTitleRange = NSMakeRange(0, attributeStr.length);
     for (int i = 0; i < imagesRangs.count; i++) {
@@ -305,7 +301,7 @@ static CGFloat getWidth(void *ref) {
     //记录当前所在页的范围，便于重新分页之后定位到对应内容页
     NSRange currentRange = [self.pagesArray[self.currentPage][@"Range"] rangeValue];
     //更新分页后的数据
-    self.pagesArray = [self coreTextPaging:[self textAttributedString] textBounds:self.view.bounds];
+    self.pagesArray = [self coreTextPaging:[self textAttributedString] textBounds:self.pageViewController.view.bounds];
     //定位到当前浏览内容所在页
     for (int i = 0; i < self.pagesArray.count; i++) {
         NSRange range = [self.pagesArray[i][@"Range"] rangeValue];
