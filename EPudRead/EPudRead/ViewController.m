@@ -150,8 +150,9 @@
 }
 //解压完成
 - (void)zipArchiveDidUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo unzippedPath:(NSString *)unzippedPath {
-    [self  pathOfOpfWithFilePath:unzippedPath];
-    NSLog(@"解压完成 %@", unzippedPath);
+//    [self  pathOfOpfWithFilePath:unzippedPath];
+    NSLog(@"解压完成 ");
+    [self readBook:nil];
 }
 
 @end
